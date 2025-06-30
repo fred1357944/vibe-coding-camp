@@ -12,17 +12,68 @@ async function loadStudentsData() {
         if (localData) {
             const parsedData = JSON.parse(localData);
             students = convertDataFormat(parsedData.batches);
+            console.log('Loaded students from localStorage:', students);
             return;
         }
         
         // Otherwise load from JSON file
         const response = await fetch('data/students.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         students = convertDataFormat(data.batches);
+        console.log('Loaded students from JSON file:', students);
     } catch (error) {
         console.error('Error loading students data:', error);
-        // Fallback to default data if loading fails
-        console.log('Using default students data');
+        // Fallback to hardcoded data if loading fails
+        console.log('Using hardcoded students data');
+        // Hardcode the students data here for fallback
+        students = {
+            '20250629': [
+                { 
+                    name: 'Amy', 
+                    image: '學員成果/20250629/Amy.jpg', 
+                    description: 'Amy 的作品展現了對色彩的敏銳掌握，創意十足的設計理念令人印象深刻。',
+                    skills: ['UI/UX Design', 'Color Theory', 'Creative Design'],
+                    projectTitle: '互動式色彩探索應用',
+                    details: 'Amy 開發了一個創新的色彩探索應用，讓使用者能夠直觀地理解色彩理論。該應用結合了現代設計美學與實用功能，獲得了導師的高度評價。'
+                },
+                { 
+                    name: 'Brian', 
+                    image: '學員成果/20250629/Brian.png', 
+                    description: 'Brian 在程式邏輯上展現了卓越的天賦，作品兼具功能性與美觀性。',
+                    skills: ['JavaScript', 'React', 'Problem Solving'],
+                    projectTitle: '智能任務管理系統',
+                    details: 'Brian 創建了一個強大的任務管理系統，具有智能分類和優先級排序功能。系統採用 React 框架，展現了紮實的前端開發能力。'
+                },
+                { 
+                    name: 'GM', 
+                    image: '學員成果/20250629/GM.png', 
+                    description: 'GM 的作品充滿創新精神，將複雜的概念以簡潔的方式呈現。',
+                    skills: ['Innovation', 'Simplicity', 'UX Design'],
+                    projectTitle: '極簡主義天氣應用',
+                    details: 'GM 設計了一個極簡但功能完整的天氣應用，通過優雅的動畫和直觀的界面，將複雜的氣象數據轉化為易懂的視覺呈現。'
+                },
+                { 
+                    name: 'YU', 
+                    image: '學員成果/20250629/YU.png', 
+                    description: 'YU 展現了紮實的基礎功力，作品細節處理得相當到位。',
+                    skills: ['HTML/CSS', 'Attention to Detail', 'Responsive Design'],
+                    projectTitle: '響應式電商網站',
+                    details: 'YU 開發了一個完整的電商網站，從商品展示到購物車功能一應俱全。特別注重響應式設計，確保在各種設備上都有完美的體驗。'
+                },
+                { 
+                    name: 'owo', 
+                    image: '學員成果/20250629/owo.png', 
+                    description: 'owo 的作品充滿童趣與創意，為專案帶來了獨特的風格。',
+                    skills: ['Animation', 'Creative Coding', 'Game Design'],
+                    projectTitle: '互動式學習遊戲',
+                    details: 'owo 創作了一個寓教於樂的互動遊戲，幫助孩子們學習程式邏輯。遊戲充滿趣味性的同時，也巧妙地融入了編程概念。'
+                }
+            ],
+            '20250727': []
+        };
     }
 }
 
@@ -42,75 +93,127 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Loading animation
 window.addEventListener('load', async function() {
-    // Load students data first
-    await loadStudentsData();
-    gsap.to('#loader', {
-        opacity: 0,
-        duration: 0.5,
-        onComplete: function() {
-            document.getElementById('loader').style.display = 'none';
-        }
-    });
+    try {
+        // Load students data first
+        await loadStudentsData();
+        
+        gsap.to('#loader', {
+            opacity: 0,
+            duration: 0.5,
+            onComplete: function() {
+                document.getElementById('loader').style.display = 'none';
+            }
+        });
 
-    // Initialize animations
-    initAnimations();
-    
-    // Display content
-    displayAllStudents();
-    displayJourneyPosts();
+        // Initialize animations
+        initAnimations();
+        
+        // Display content
+        displayAllStudents();
+        displayJourneyPosts();
+    } catch (error) {
+        console.error('Error during initialization:', error);
+        // Hide loader even if there's an error
+        document.getElementById('loader').style.display = 'none';
+    }
 });
 
 function initAnimations() {
-    // Hero animations
-    gsap.from('.hero-title', {
+    // Hero animations with improved effects
+    const heroTl = gsap.timeline({ delay: 0.3 });
+    
+    heroTl.from('.hero-title', {
+        y: 100,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power4.out'
+    })
+    .from('.hero-subtitle', {
         y: 50,
         opacity: 0,
         duration: 1,
-        delay: 0.5
-    });
-    
-    gsap.from('.hero-subtitle', {
-        y: 30,
-        opacity: 0,
-        duration: 1,
-        delay: 0.7
-    });
-    
-    gsap.from('.hero-btn', {
+        ease: 'power3.out'
+    }, '-=0.6')
+    .from('.hero-btn', {
         scale: 0,
+        opacity: 0,
         duration: 0.8,
-        delay: 1,
-        ease: 'back.out(1.7)'
+        ease: 'elastic.out(1, 0.5)'
+    }, '-=0.4');
+
+    // Blob animations
+    gsap.to('.animate-blob', {
+        y: '15%',
+        x: '10%',
+        duration: 8,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: {
+            each: 2,
+            from: 'random'
+        }
     });
 
-    // Section animations
+    // Section animations with better scroll triggers
     gsap.utils.toArray('.section-title').forEach(title => {
         gsap.from(title, {
             scrollTrigger: {
                 trigger: title,
-                start: 'top 80%',
-                toggleActions: 'play none none reverse'
+                start: 'top 85%',
+                end: 'top 50%',
+                toggleActions: 'play none none reverse',
+                scrub: 1
             },
-            y: 50,
+            y: 80,
             opacity: 0,
-            duration: 1
+            duration: 1.5,
+            ease: 'power3.out'
         });
     });
 
-    // Batch cards animation
-    gsap.utils.toArray('.batch-card').forEach((card, index) => {
-        gsap.from(card, {
-            scrollTrigger: {
-                trigger: card,
-                start: 'top 80%',
-                toggleActions: 'play none none reverse'
-            },
-            y: 60,
+    // Batch cards with stagger animation
+    ScrollTrigger.batch('.batch-card', {
+        onEnter: batch => gsap.to(batch, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1,
+            stagger: 0.15,
+            ease: 'power3.out',
+            overwrite: 'auto'
+        }),
+        onLeave: batch => gsap.to(batch, {
             opacity: 0,
-            duration: 0.8,
-            delay: index * 0.2
-        });
+            y: 100,
+            scale: 0.9,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: 'power2.in',
+            overwrite: 'auto'
+        }),
+        onEnterBack: batch => gsap.to(batch, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: 'power2.out',
+            overwrite: 'auto'
+        }),
+        onLeaveBack: batch => gsap.to(batch, {
+            opacity: 0,
+            y: -100,
+            scale: 0.9,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: 'power2.in',
+            overwrite: 'auto'
+        })
     });
+
+    // Set initial state for batch cards
+    gsap.set('.batch-card', { opacity: 0, y: 100, scale: 0.9 });
 }
 
 function showBatch(batchId) {
@@ -187,20 +290,42 @@ function displayAllStudents() {
         galleryGrid.appendChild(item);
     });
 
-    // Delayed animation for gallery items
+    // Gallery items animation with improved ScrollTrigger
     setTimeout(() => {
-        gsap.from('.gallery-item', {
-            scrollTrigger: {
-                trigger: '#gallery',
-                start: 'top 80%',
-                toggleActions: 'play none none reverse'
+        // Set initial state
+        gsap.set('.gallery-item', { opacity: 0, y: 100, scale: 0.95 });
+        
+        // Batch animation for gallery items
+        ScrollTrigger.batch('.gallery-item', {
+            onEnter: batch => {
+                gsap.to(batch, {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 1,
+                    stagger: {
+                        each: 0.1,
+                        from: 'start'
+                    },
+                    ease: 'power3.out',
+                    overwrite: 'auto'
+                });
             },
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.1
+            onLeave: batch => gsap.set(batch, { opacity: 0, y: 100, scale: 0.95 }),
+            onEnterBack: batch => gsap.to(batch, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.6,
+                stagger: 0.05,
+                ease: 'power2.out',
+                overwrite: 'auto'
+            }),
+            onLeaveBack: batch => gsap.set(batch, { opacity: 0, y: -100, scale: 0.95 }),
+            start: 'top 90%',
+            end: 'bottom 10%'
         });
-    }, 100);
+    }, 200);
 }
 
 function openModal(studentName) {

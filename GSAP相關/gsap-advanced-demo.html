@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP 3.13 進階功能展示 - 現在完全免費！</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP 3.13 最新版本 - 所有插件現在都免費！ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/TextPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollToPlugin.min.js"></script>
+    <!-- 以下插件現在都完全免費！ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/DrawSVGPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/MorphSVGPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Physics2DPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomBounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomWiggle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Flip.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .demo-box {
+            transition: all 0.3s ease;
+        }
+        .demo-box:hover {
+            transform: scale(1.05);
+        }
+        .physics-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .physics-ball {
+            position: absolute;
+            border-radius: 50%;
+        }
+        .flip-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        .flip-item {
+            background: #3B82F6;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+        }
+        .morphing-path {
+            stroke-width: 3;
+            fill: none;
+            stroke: #3B82F6;
+        }
+        .free-badge {
+            background: linear-gradient(45deg, #10B981, #059669);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- 導航欄 -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-800">GSAP 3.13 進階展示</h1>
+                    <span class="free-badge">全部免費！</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#basic" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">基礎動畫</a>
+                        <a href="#timeline" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">時間軸</a>
+                        <a href="#splittext" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">SplitText</a>
+                        <a href="#svg-advanced" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">SVG 進階</a>
+                        <a href="#physics" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">物理動畫</a>
+                        <a href="#flip" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">FLIP 動畫</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要內容 -->
+    <main class="pt-16">
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="hero-title text-5xl md:text-6xl font-bold mb-6 opacity-0">
+                    GSAP 3.13 進階功能
+                </h1>
+                <p class="hero-subtitle text-xl md:text-2xl mb-8 opacity-0">
+                    🎉 所有高級插件現在完全免費！感謝 Webflow！
+                </p>
+                <div class="hero-announcement bg-white/20 backdrop-blur-sm rounded-lg p-6 mb-8 opacity-0">
+                    <h3 class="text-xl font-semibold mb-2">重大更新！</h3>
+                    <p class="text-sm">SplitText、MorphSVG、DrawSVG、Physics2D 等所有插件現在都免費開放使用</p>
+                </div>
+                <div class="hero-boxes flex justify-center space-x-4 mb-8">
+                    <div class="w-16 h-16 bg-white rounded-lg shadow-lg transform scale-0"></div>
+                    <div class="w-16 h-16 bg-yellow-400 rounded-lg shadow-lg transform scale-0"></div>
+                    <div class="w-16 h-16 bg-pink-400 rounded-lg shadow-lg transform scale-0"></div>
+                    <div class="w-16 h-16 bg-green-400 rounded-lg shadow-lg transform scale-0"></div>
+                </div>
+                <button class="hero-btn bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors opacity-0">
+                    探索免費功能
+                </button>
+            </div>
+        </section>
+
+        <!-- 基礎動畫展示 -->
+        <section id="basic" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">基礎動畫方法</h2>
+                    <p class="text-xl text-gray-600">掌握 GSAP 的四大核心方法</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- gsap.to() 展示 -->
+                    <div class="demo-box bg-gradient-to-br from-blue-400 to-blue-600 p-6 rounded-lg shadow-lg text-white text-center">
+                        <h3 class="text-xl font-semibold mb-4">gsap.to()</h3>
+                        <div class="to-demo w-16 h-16 bg-white rounded-lg mx-auto mb-4"></div>
+                        <p class="text-sm mb-4">動畫到指定狀態</p>
+                        <button class="to-btn bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+                            執行動畫
+                        </button>
+                    </div>
+
+                    <!-- gsap.from() 展示 -->
+                    <div class="demo-box bg-gradient-to-br from-green-400 to-green-600 p-6 rounded-lg shadow-lg text-white text-center">
+                        <h3 class="text-xl font-semibold mb-4">gsap.from()</h3>
+                        <div class="from-demo w-16 h-16 bg-white rounded-lg mx-auto mb-4"></div>
+                        <p class="text-sm mb-4">從指定狀態開始</p>
+                        <button class="from-btn bg-white text-green-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+                            執行動畫
+                        </button>
+                    </div>
+
+                    <!-- gsap.fromTo() 展示 -->
+                    <div class="demo-box bg-gradient-to-br from-purple-400 to-purple-600 p-6 rounded-lg shadow-lg text-white text-center">
+                        <h3 class="text-xl font-semibold mb-4">gsap.fromTo()</h3>
+                        <div class="fromto-demo w-16 h-16 bg-white rounded-lg mx-auto mb-4"></div>
+                        <p class="text-sm mb-4">完全控制起終點</p>
+                        <button class="fromto-btn bg-white text-purple-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+                            執行動畫
+                        </button>
+                    </div>
+
+                    <!-- gsap.set() 展示 -->
+                    <div class="demo-box bg-gradient-to-br from-orange-400 to-orange-600 p-6 rounded-lg shadow-lg text-white text-center">
+                        <h3 class="text-xl font-semibold mb-4">gsap.set()</h3>
+                        <div class="set-demo w-16 h-16 bg-white rounded-lg mx-auto mb-4"></div>
+                        <p class="text-sm mb-4">立即設定屬性</p>
+                        <button class="set-btn bg-white text-orange-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+                            執行設定
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline 動畫展示 -->
+        <section id="timeline" class="py-20 bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Timeline 時間軸控制</h2>
+                    <p class="text-xl text-gray-600">創建複雜的動畫序列</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="flex flex-col md:flex-row items-center justify-between mb-8">
+                        <div class="timeline-controls space-x-4 mb-4 md:mb-0">
+                            <button class="timeline-play bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+                                播放
+                            </button>
+                            <button class="timeline-pause bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600">
+                                暫停
+                            </button>
+                            <button class="timeline-reverse bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600">
+                                反向
+                            </button>
+                            <button class="timeline-restart bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+                                重新開始
+                            </button>
+                        </div>
+                        <div class="timeline-progress-container w-full md:w-64 bg-gray-200 rounded-full h-2">
+                            <div class="timeline-progress bg-blue-500 h-2 rounded-full w-0"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-demo flex flex-wrap justify-center items-center space-x-4 h-32">
+                        <div class="timeline-box1 w-16 h-16 bg-red-500 rounded-lg"></div>
+                        <div class="timeline-box2 w-16 h-16 bg-blue-500 rounded-lg"></div>
+                        <div class="timeline-box3 w-16 h-16 bg-green-500 rounded-lg"></div>
+                        <div class="timeline-box4 w-16 h-16 bg-yellow-500 rounded-lg"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SplitText 展示 -->
+        <section id="splittext" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">SplitText 插件 <span class="free-badge">現在免費！</span></h2>
+                    <p class="text-xl text-gray-600">文字分割動畫的終極工具 - 全新重寫版本，體積減少 50%</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 字符動畫 -->
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-8 text-center">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800">字符分割動畫</h3>
+                        <div class="split-chars text-3xl font-bold text-blue-600 mb-6 h-20 flex items-center justify-center">
+                            讓每個字符都跳舞！
+                        </div>
+                        <button class="split-chars-btn bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+                            字符飛入
+                        </button>
+                    </div>
+
+                    <!-- 單詞動畫 -->
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-100 rounded-lg p-8 text-center">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800">單詞分割動畫</h3>
+                        <div class="split-words text-2xl font-bold text-green-600 mb-6 h-20 flex items-center justify-center">
+                            這是 SplitText 的 強大 功能 展示
+                        </div>
+                        <button class="split-words-btn bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+                            單詞翻轉
+                        </button>
+                    </div>
+
+                    <!-- 行分割動畫 -->
+                    <div class="bg-gradient-to-br from-purple-50 to-violet-100 rounded-lg p-8 text-center">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800">行分割動畫</h3>
+                        <div class="split-lines text-lg text-purple-600 mb-6 h-20 flex items-center justify-center">
+                            <div>
+                                第一行文字<br>
+                                第二行文字<br>
+                                第三行文字
+                            </div>
+                        </div>
+                        <button class="split-lines-btn bg-purple-500 text-white px-6 py-2 rounded-md hover:bg-purple-600">
+                            行滑入
+                        </button>
+                    </div>
+
+                    <!-- 混合動畫 -->
+                    <div class="bg-gradient-to-br from-pink-50 to-rose-100 rounded-lg p-8 text-center">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800">混合動畫效果</h3>
+                        <div class="split-mixed text-xl font-bold text-pink-600 mb-6 h-20 flex items-center justify-center">
+                            <div>
+                                每個字符都有<br>
+                                不同的動畫效果
+                            </div>
+                        </div>
+                        <button class="split-mixed-btn bg-pink-500 text-white px-6 py-2 rounded-md hover:bg-pink-600">
+                            混合效果
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SVG 進階動畫展示 -->
+        <section id="svg-advanced" class="py-20 bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">SVG 進階動畫 <span class="free-badge">DrawSVG + MorphSVG</span></h2>
+                    <p class="text-xl text-gray-600">原本付費的 SVG 插件現在完全免費</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- DrawSVG 路徑繪製 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">DrawSVG 路徑繪製</h3>
+                        <svg class="mx-auto mb-6" width="300" height="200" viewBox="0 0 300 200">
+                            <path class="draw-signature" d="M20 50 Q50 20 80 50 T140 50 M150 50 Q180 20 210 50 T270 50 M20 100 Q50 70 80 100 T140 100 M150 100 L180 130 L210 100 L240 130 L270 100" stroke="#3B82F6" stroke-width="3" fill="none"/>
+                            <circle class="draw-dot" cx="280" cy="50" r="5" fill="#3B82F6" opacity="0"/>
+                        </svg>
+                        <button class="draw-signature-btn bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+                            繪製簽名
+                        </button>
+                    </div>
+
+                    <!-- MorphSVG 形狀變形 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">MorphSVG 形狀變形</h3>
+                        <svg class="mx-auto mb-6" width="300" height="200" viewBox="0 0 300 200">
+                            <path class="morph-shape" d="M150,50 Q200,50 200,100 Q200,150 150,150 Q100,150 100,100 Q100,50 150,50 Z" fill="#10B981"/>
+                        </svg>
+                        <div class="space-x-2">
+                            <button class="morph-circle-btn bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 text-sm">
+                                圓形
+                            </button>
+                            <button class="morph-star-btn bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 text-sm">
+                                星形
+                            </button>
+                            <button class="morph-heart-btn bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 text-sm">
+                                愛心
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 複雜路徑動畫 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">複雜路徑動畫</h3>
+                        <svg class="mx-auto mb-6" width="300" height="200" viewBox="0 0 300 200">
+                            <path class="complex-path" d="M20,100 Q50,20 100,100 T180,100 Q220,50 250,100 Q280,150 200,180 Q120,200 50,180 Q10,150 20,100 Z" stroke="#8B5CF6" stroke-width="3" fill="rgba(139,92,246,0.1)"/>
+                        </svg>
+                        <button class="complex-path-btn bg-purple-500 text-white px-6 py-2 rounded-md hover:bg-purple-600">
+                            複雜繪製
+                        </button>
+                    </div>
+
+                    <!-- 動態圖表 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">動態圖表</h3>
+                        <svg class="mx-auto mb-6" width="300" height="200" viewBox="0 0 300 200">
+                            <g class="chart-bars">
+                                <rect class="bar1" x="50" y="150" width="30" height="0" fill="#EF4444"/>
+                                <rect class="bar2" x="100" y="150" width="30" height="0" fill="#F59E0B"/>
+                                <rect class="bar3" x="150" y="150" width="30" height="0" fill="#10B981"/>
+                                <rect class="bar4" x="200" y="150" width="30" height="0" fill="#3B82F6"/>
+                            </g>
+                        </svg>
+                        <button class="chart-btn bg-indigo-500 text-white px-6 py-2 rounded-md hover:bg-indigo-600">
+                            動態圖表
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Physics2D 物理動畫 -->
+        <section id="physics" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Physics2D 物理動畫 <span class="free-badge">現在免費！</span></h2>
+                    <p class="text-xl text-gray-600">真實的物理效果，不需要複雜的物理引擎</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 重力模擬 -->
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-8">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800 text-center">重力模擬</h3>
+                        <div class="physics-container bg-white rounded-lg h-64 relative border-2 border-gray-200">
+                            <div class="physics-ball bg-red-500 w-8 h-8 absolute top-4 left-4"></div>
+                            <div class="physics-ball bg-blue-500 w-6 h-6 absolute top-4 left-16"></div>
+                            <div class="physics-ball bg-green-500 w-10 h-10 absolute top-4 left-28"></div>
+                        </div>
+                        <div class="text-center mt-4 space-x-2">
+                            <button class="gravity-btn bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                                開始重力
+                            </button>
+                            <button class="bounce-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                                彈跳效果
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 彈性動畫 -->
+                    <div class="bg-gradient-to-br from-purple-50 to-indigo-100 rounded-lg p-8">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800 text-center">彈性與擺動</h3>
+                        <div class="flex justify-center items-center h-64">
+                            <div class="bounce-demo space-x-4">
+                                <div class="bounce-ball bg-purple-500 w-12 h-12 rounded-full inline-block"></div>
+                                <div class="wiggle-ball bg-pink-500 w-12 h-12 rounded-full inline-block"></div>
+                                <div class="elastic-ball bg-indigo-500 w-12 h-12 rounded-full inline-block"></div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4 space-x-2">
+                            <button class="custom-bounce-btn bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600">
+                                自定義彈跳
+                            </button>
+                            <button class="wiggle-btn bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600">
+                                擺動效果
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FLIP 動畫技術 -->
+        <section id="flip" class="py-20 bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">FLIP 動畫技術 <span class="free-badge">現在免費！</span></h2>
+                    <p class="text-xl text-gray-600">First, Last, Invert, Play - 讓佈局變化如絲般順滑</p>
+                </div>
+                
+                <div class="space-y-8">
+                    <!-- FLIP 卡片排序 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800 text-center">FLIP 卡片排序</h3>
+                        <div class="flip-container mb-6" id="flip-container">
+                            <div class="flip-item" data-id="1">項目 1</div>
+                            <div class="flip-item" data-id="2">項目 2</div>
+                            <div class="flip-item" data-id="3">項目 3</div>
+                            <div class="flip-item" data-id="4">項目 4</div>
+                            <div class="flip-item" data-id="5">項目 5</div>
+                            <div class="flip-item" data-id="6">項目 6</div>
+                        </div>
+                        <div class="text-center space-x-2">
+                            <button class="flip-shuffle-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                                隨機排序
+                            </button>
+                            <button class="flip-sort-btn bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                                排序
+                            </button>
+                            <button class="flip-grid-btn bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600">
+                                切換佈局
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ScrollTrigger 進階效果 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800 text-center">ScrollTrigger 進階效果</h3>
+                        <div class="space-y-32">
+                            <!-- 視差滾動 -->
+                            <div class="parallax-container relative h-64 bg-gradient-to-r from-blue-400 to-purple-600 rounded-lg overflow-hidden">
+                                <div class="parallax-bg absolute inset-0 bg-gradient-to-r from-pink-400 to-yellow-400 opacity-50"></div>
+                                <div class="parallax-text absolute inset-0 flex items-center justify-center text-white text-2xl font-bold">
+                                    視差滾動效果
+                                </div>
+                            </div>
+
+                            <!-- 捲軸觸發的形狀變化 -->
+                            <div class="scroll-morph text-center">
+                                <svg width="200" height="200" viewBox="0 0 200 200" class="mx-auto">
+                                    <path class="scroll-morph-path" d="M100,20 Q180,100 100,180 Q20,100 100,20 Z" fill="#3B82F6"/>
+                                </svg>
+                                <p class="text-gray-600 mt-4">滾動時形狀會變化</p>
+                            </div>
+
+                            <!-- 文字揭示效果 -->
+                            <div class="text-reveal-container bg-gray-800 text-white p-8 rounded-lg">
+                                <h3 class="text-reveal text-3xl font-bold mb-4">
+                                    這段文字會在滾動時逐漸顯現
+                                </h3>
+                                <p class="text-reveal-p text-lg opacity-50">
+                                    每個字符都有獨特的動畫時間，創造出打字機的效果
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 關於更新 -->
+        <section class="py-20 bg-gray-800 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-bold mb-4">GSAP 3.13 重大更新</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div class="bg-white/10 rounded-lg p-6">
+                        <h3 class="text-xl font-bold mb-2">🎉 完全免費</h3>
+                        <p>感謝 Webflow，所有插件現在都免費</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-6">
+                        <h3 class="text-xl font-bold mb-2">⚡ 效能提升</h3>
+                        <p>SplitText 重寫，體積減少 50%</p>
+                    </div>
+                    <div class="bg-white/10 rounded-lg p-6">
+                        <h3 class="text-xl font-bold mb-2">🚀 更多功能</h3>
+                        <p>新增更多動畫效果和控制選項</p>
+                    </div>
+                </div>
+                <div class="author-info opacity-0 transform translate-y-10">
+                    <p class="text-xl mb-4">
+                        這個展示網站展現了 GSAP 3.13 的強大功能
+                    </p>
+                    <p class="text-lg">
+                        💡 讓我們一起用這些免費工具創造更美好的網頁體驗！
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 返回頂部按鈕 -->
+    <button class="back-to-top fixed bottom-8 right-8 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors opacity-0 pointer-events-none">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+        </svg>
+    </button>
+
+    <script>
+        // 註冊所有插件
+        gsap.registerPlugin(ScrollTrigger, TextPlugin, ScrollToPlugin, SplitText, DrawSVGPlugin, MorphSVGPlugin, Physics2DPlugin, CustomBounce, CustomWiggle, Flip);
+
+        // 變數宣告
+        let mainTimeline;
+        let isGridLayout = true;
+
+        // 修復導航平滑滾動
+        function setupSmoothScroll() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        gsap.to(window, {
+                            duration: 1,
+                            scrollTo: {
+                                y: targetElement,
+                                offsetY: 80 // 考慮固定導航欄的高度
+                            },
+                            ease: "power2.inOut"
+                        });
+                    }
+                });
+            });
+
+            // 返回頂部
+            document.querySelector('.back-to-top').addEventListener('click', () => {
+                gsap.to(window, {
+                    duration: 1,
+                    scrollTo: {y: 0},
+                    ease: "power2.inOut"
+                });
+            });
+        }
+
+        // 初始化動畫
+        function initAnimations() {
+            // Hero Section 動畫
+            const heroTl = gsap.timeline();
+            heroTl.to('.hero-title', {duration: 1, opacity: 1, y: 0, ease: 'power2.out'})
+                  .to('.hero-subtitle', {duration: 0.8, opacity: 1, y: 0, ease: 'power2.out'}, '-=0.5')
+                  .to('.hero-announcement', {duration: 0.8, opacity: 1, y: 0, ease: 'power2.out'}, '-=0.3')
+                  .to('.hero-boxes > div', {duration: 0.6, scale: 1, stagger: 0.1, ease: 'back.out(1.7)'}, '-=0.3')
+                  .to('.hero-btn', {duration: 0.5, opacity: 1, y: 0, ease: 'power2.out'}, '-=0.2');
+
+            // 返回頂部按鈕
+            ScrollTrigger.create({
+                start: 'top -200',
+                end: 99999,
+                toggleClass: {className: 'opacity-100 pointer-events-auto', targets: '.back-to-top'}
+            });
+
+            // 作者資訊動畫
+            gsap.to('.author-info', {
+                scrollTrigger: '.author-info',
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: 'power2.out'
+            });
+
+            // 視差滾動效果
+            gsap.to('.parallax-bg', {
+                scrollTrigger: {
+                    trigger: '.parallax-container',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                yPercent: -50
+            });
+
+            // 滾動變形效果
+            gsap.to('.scroll-morph-path', {
+                scrollTrigger: {
+                    trigger: '.scroll-morph',
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    scrub: true
+                },
+                attr: {
+                    d: "M100,20 L180,60 L160,140 L40,140 L20,60 Z"
+                }
+            });
+
+            // 文字揭示效果
+            const revealText = new SplitText('.text-reveal', {type: 'chars'});
+            gsap.from(revealText.chars, {
+                scrollTrigger: {
+                    trigger: '.text-reveal-container',
+                    start: 'top 80%'
+                },
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                stagger: 0.05
+            });
+        }
+
+        // 基礎動畫
+        function setupBasicAnimations() {
+            // gsap.to() 示例
+            document.querySelector('.to-btn').addEventListener('click', () => {
+                gsap.to('.to-demo', {
+                    duration: 1,
+                    x: 50,
+                    rotation: 360,
+                    scale: 1.2,
+                    ease: 'power2.out',
+                    yoyo: true,
+                    repeat: 1
+                });
+            });
+
+            // gsap.from() 示例
+            document.querySelector('.from-btn').addEventListener('click', () => {
+                gsap.from('.from-demo', {
+                    duration: 1,
+                    x: -50,
+                    opacity: 0,
+                    scale: 0,
+                    ease: 'bounce.out'
+                });
+            });
+
+            // gsap.fromTo() 示例
+            document.querySelector('.fromto-btn').addEventListener('click', () => {
+                gsap.fromTo('.fromto-demo', 
+                    {x: -50, opacity: 0, scale: 0},
+                    {x: 50, opacity: 1, scale: 1.5, duration: 1, ease: 'elastic.out(1, 0.3)'}
+                );
+            });
+
+            // gsap.set() 示例
+            document.querySelector('.set-btn').addEventListener('click', () => {
+                const colors = ['bg-red-400', 'bg-blue-400', 'bg-green-400', 'bg-yellow-400', 'bg-purple-400'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                colors.forEach(color => {
+                    document.querySelector('.set-demo').classList.remove(color);
+                });
+                
+                gsap.set('.set-demo', {
+                    className: `w-16 h-16 rounded-lg mx-auto mb-4 ${randomColor}`,
+                    rotation: Math.random() * 360,
+                    scale: 0.8 + Math.random() * 0.4
+                });
+            });
+        }
+
+        // Timeline 動畫
+        function setupTimelineAnimations() {
+            mainTimeline = gsap.timeline({paused: true});
+            mainTimeline.to('.timeline-box1', {duration: 1, x: 100, rotation: 360})
+                       .to('.timeline-box2', {duration: 1, y: -50, scale: 1.5}, '-=0.5')
+                       .to('.timeline-box3', {duration: 1, x: -100, rotation: -180}, '-=0.5')
+                       .to('.timeline-box4', {duration: 1, y: 50, scale: 0.8}, '-=0.5');
+
+            mainTimeline.to('.timeline-progress', {
+                duration: mainTimeline.duration(),
+                width: '100%',
+                ease: 'none'
+            }, 0);
+
+            document.querySelector('.timeline-play').addEventListener('click', () => mainTimeline.play());
+            document.querySelector('.timeline-pause').addEventListener('click', () => mainTimeline.pause());
+            document.querySelector('.timeline-reverse').addEventListener('click', () => mainTimeline.reverse());
+            document.querySelector('.timeline-restart').addEventListener('click', () => mainTimeline.restart());
+        }
+
+        // SplitText 動畫
+        function setupSplitTextAnimations() {
+            // 字符分割
+            document.querySelector('.split-chars-btn').addEventListener('click', () => {
+                const split = new SplitText('.split-chars', {type: 'chars'});
+                gsap.from(split.chars, {
+                    duration: 0.8,
+                    y: -50,
+                    opacity: 0,
+                    rotation: 360,
+                    scale: 0,
+                    stagger: 0.05,
+                    ease: 'back.out(1.7)'
+                });
+            });
+
+            // 單詞分割
+            document.querySelector('.split-words-btn').addEventListener('click', () => {
+                const split = new SplitText('.split-words', {type: 'words'});
+                gsap.from(split.words, {
+                    duration: 0.8,
+                    rotationY: 180,
+                    opacity: 0,
+                    transformOrigin: 'center',
+                    stagger: 0.1,
+                    ease: 'power2.out'
+                });
+            });
+
+            // 行分割
+            document.querySelector('.split-lines-btn').addEventListener('click', () => {
+                const split = new SplitText('.split-lines', {type: 'lines'});
+                gsap.from(split.lines, {
+                    duration: 1,
+                    x: -100,
+                    opacity: 0,
+                    stagger: 0.2,
+                    ease: 'power2.out'
+                });
+            });
+
+            // 混合效果
+            document.querySelector('.split-mixed-btn').addEventListener('click', () => {
+                const split = new SplitText('.split-mixed', {type: 'chars'});
+                gsap.from(split.chars, {
+                    duration: 1,
+                    y: () => Math.random() * 100 - 50,
+                    x: () => Math.random() * 100 - 50,
+                    rotation: () => Math.random() * 360,
+                    scale: 0,
+                    opacity: 0,
+                    stagger: 0.03,
+                    ease: 'elastic.out(1, 0.3)'
+                });
+            });
+        }
+
+        // SVG 進階動畫
+        function setupAdvancedSVGAnimations() {
+            // DrawSVG 簽名繪製
+            const signature = document.querySelector('.draw-signature');
+            gsap.set(signature, {drawSVG: "0%"});
+            
+            document.querySelector('.draw-signature-btn').addEventListener('click', () => {
+                const tl = gsap.timeline();
+                tl.to(signature, {duration: 3, drawSVG: "100%", ease: "none"})
+                  .to('.draw-dot', {duration: 0.5, opacity: 1, scale: 1.5, ease: "bounce.out"}, "-=0.5");
+            });
+
+            // MorphSVG 形狀變形
+            const shapes = {
+                circle: "M150,50 Q200,50 200,100 Q200,150 150,150 Q100,150 100,100 Q100,50 150,50 Z",
+                star: "M150,60 L160,90 L190,90 L170,110 L180,140 L150,125 L120,140 L130,110 L110,90 L140,90 Z",
+                heart: "M150,140 Q120,100 120,80 Q120,60 140,60 Q150,70 150,70 Q150,70 160,60 Q180,60 180,80 Q180,100 150,140 Z"
+            };
+
+            document.querySelector('.morph-circle-btn').addEventListener('click', () => {
+                gsap.to('.morph-shape', {duration: 1, morphSVG: shapes.circle, ease: "power2.inOut"});
+            });
+
+            document.querySelector('.morph-star-btn').addEventListener('click', () => {
+                gsap.to('.morph-shape', {duration: 1, morphSVG: shapes.star, ease: "power2.inOut"});
+            });
+
+            document.querySelector('.morph-heart-btn').addEventListener('click', () => {
+                gsap.to('.morph-shape', {duration: 1, morphSVG: shapes.heart, ease: "power2.inOut"});
+            });
+
+            // 複雜路徑動畫
+            const complexPath = document.querySelector('.complex-path');
+            gsap.set(complexPath, {drawSVG: "0%"});
+            
+            document.querySelector('.complex-path-btn').addEventListener('click', () => {
+                gsap.to(complexPath, {duration: 2, drawSVG: "100%", ease: "power2.inOut"});
+            });
+
+            // 動態圖表
+            document.querySelector('.chart-btn').addEventListener('click', () => {
+                const heights = [80, 120, 60, 100];
+                gsap.to('.chart-bars rect', {
+                    duration: 1.5,
+                    height: (i) => heights[i],
+                    y: (i) => 150 - heights[i],
+                    stagger: 0.2,
+                    ease: "bounce.out"
+                });
+            });
+        }
+
+        // 物理動畫
+        function setupPhysicsAnimations() {
+            // 重力模擬
+            document.querySelector('.gravity-btn').addEventListener('click', () => {
+                gsap.to('.physics-ball', {
+                    duration: 2,
+                    physics2D: {
+                        velocity: "random(200, 400)",
+                        angle: "random(250, 290)",
+                        gravity: 500
+                    },
+                    ease: "power1.inOut"
+                });
+            });
+
+            // 彈跳效果
+            document.querySelector('.bounce-btn').addEventListener('click', () => {
+                gsap.to('.physics-ball', {
+                    duration: 3,
+                    physics2D: {
+                        velocity: 300,
+                        angle: 270,
+                        gravity: 400,
+                        friction: 0.8
+                    }
+                });
+            });
+
+            // 自定義彈跳
+            document.querySelector('.custom-bounce-btn').addEventListener('click', () => {
+                CustomBounce.create("myBounce", {strength: 0.7, squash: 3});
+                gsap.to('.bounce-ball', {
+                    duration: 2,
+                    y: 100,
+                    ease: "myBounce",
+                    yoyo: true,
+                    repeat: -1
+                });
+            });
+
+            // 擺動效果
+            document.querySelector('.wiggle-btn').addEventListener('click', () => {
+                CustomWiggle.create("myWiggle", {wiggles: 6, type: "uniform"});
+                gsap.to('.wiggle-ball', {
+                    duration: 2,
+                    rotation: 360,
+                    ease: "myWiggle"
+                });
+            });
+        }
+
+        // FLIP 動畫
+        function setupFlipAnimations() {
+            const container = document.getElementById('flip-container');
+            const items = container.children;
+
+            // 隨機排序
+            document.querySelector('.flip-shuffle-btn').addEventListener('click', () => {
+                const state = Flip.getState(items);
+                
+                // 打亂順序
+                const shuffled = Array.from(items).sort(() => Math.random() - 0.5);
+                shuffled.forEach(item => container.appendChild(item));
+                
+                Flip.from(state, {
+                    duration: 0.8,
+                    ease: "power2.inOut",
+                    stagger: 0.1
+                });
+            });
+
+            // 排序
+            document.querySelector('.flip-sort-btn').addEventListener('click', () => {
+                const state = Flip.getState(items);
+                
+                // 按 data-id 排序
+                const sorted = Array.from(items).sort((a, b) => 
+                    parseInt(a.dataset.id) - parseInt(b.dataset.id)
+                );
+                sorted.forEach(item => container.appendChild(item));
+                
+                Flip.from(state, {
+                    duration: 0.8,
+                    ease: "power2.inOut"
+                });
+            });
+
+            // 切換佈局
+            document.querySelector('.flip-grid-btn').addEventListener('click', () => {
+                const state = Flip.getState(items);
+                
+                if (isGridLayout) {
+                    // 切換到線性佈局
+                    container.style.display = 'flex';
+                    container.style.flexDirection = 'column';
+                    container.style.gap = '0.5rem';
+                } else {
+                    // 切換回網格佈局
+                    container.style.display = 'grid';
+                    container.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                    container.style.gap = '1rem';
+                }
+                
+                isGridLayout = !isGridLayout;
+                
+                Flip.from(state, {
+                    duration: 1,
+                    ease: "power2.inOut"
+                });
+            });
+        }
+
+        // 初始化所有功能
+        document.addEventListener('DOMContentLoaded', () => {
+            setupSmoothScroll();
+            initAnimations();
+            setupBasicAnimations();
+            setupTimelineAnimations();
+            setupSplitTextAnimations();
+            setupAdvancedSVGAnimations();
+            setupPhysicsAnimations();
+            setupFlipAnimations();
+        });
+    </script>
+</body>
+</html>

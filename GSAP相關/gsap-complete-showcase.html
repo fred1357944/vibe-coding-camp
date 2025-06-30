@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP 完整功能展示 - 2024 版本</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP Core -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    
+    <!-- GSAP Plugins (Free) -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Draggable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/MotionPathPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/EaselPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/PixiPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/EasePack.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/CustomEase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Flip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Observer.min.js"></script>
+    
+    <style>
+        /* 自定義樣式 */
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .section-gradient {
+            background: linear-gradient(180deg, #f3f4f6 0%, #ffffff 100%);
+        }
+        
+        .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+        
+        .feature-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Flip 動畫容器 */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+        
+        /* 自定義滾動條 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        
+        /* 動畫標記 */
+        .animation-marker {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ef4444;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        /* 路徑跟隨 */
+        .motion-path {
+            stroke: #3b82f6;
+            stroke-width: 2;
+            fill: none;
+            opacity: 0.3;
+        }
+        
+        /* Stagger 網格 */
+        .stagger-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .stagger-item {
+            aspect-ratio: 1;
+            background: #8b5cf6;
+            border-radius: 0.25rem;
+        }
+        
+        /* 工具方法展示 */
+        .utility-demo {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 2rem;
+        }
+        
+        /* 時間軸可視化 */
+        .timeline-track {
+            position: relative;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 2px;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #3b82f6;
+            border: 2px solid white;
+            border-radius: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 custom-scrollbar">
+    <!-- 導航欄 -->
+    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-2xl font-bold gradient-bg bg-clip-text text-transparent">GSAP 完整功能</h1>
+                    <span class="text-sm text-gray-500">v3.12.5</span>
+                </div>
+                <button class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主內容 -->
+    <main class="pt-16">
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                        GSAP 完整功能展示
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">
+                        探索 GSAP 的所有強大功能
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <button class="quick-start-btn bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            快速開始
+                        </button>
+                        <button class="docs-btn bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-all">
+                            查看文檔
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. 基礎功能 (Fundamentals) -->
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">基礎功能 (Fundamentals)</h2>
+                
+                <!-- Tween 展示 -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-4">Tween 補間動畫</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- gsap.to() -->
+                        <div class="feature-card bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-semibold mb-3">gsap.to()</h4>
+                            <div class="tween-to-demo w-20 h-20 bg-blue-500 rounded-lg mx-auto mb-4"></div>
+                            <button class="tween-to-btn w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                                執行 to()
+                            </button>
+                            <div class="code-block mt-4 text-xs">
+gsap.to(".box", {
+  x: 100,
+  rotation: 360,
+  duration: 2
+});
+                            </div>
+                        </div>
+                        
+                        <!-- gsap.from() -->
+                        <div class="feature-card bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-semibold mb-3">gsap.from()</h4>
+                            <div class="tween-from-demo w-20 h-20 bg-green-500 rounded-lg mx-auto mb-4"></div>
+                            <button class="tween-from-btn w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+                                執行 from()
+                            </button>
+                            <div class="code-block mt-4 text-xs">
+gsap.from(".box", {
+  y: -100,
+  opacity: 0,
+  duration: 1
+});
+                            </div>
+                        </div>
+                        
+                        <!-- gsap.fromTo() -->
+                        <div class="feature-card bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-semibold mb-3">gsap.fromTo()</h4>
+                            <div class="tween-fromto-demo w-20 h-20 bg-purple-500 rounded-lg mx-auto mb-4"></div>
+                            <button class="tween-fromto-btn w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">
+                                執行 fromTo()
+                            </button>
+                            <div class="code-block mt-4 text-xs">
+gsap.fromTo(".box", 
+  {scale: 0, rotation: -180},
+  {scale: 1, rotation: 0, duration: 1.5}
+);
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline 展示 -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-4">Timeline 時間軸</h3>
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <div class="timeline-demo mb-6">
+                            <div class="flex justify-center space-x-4 mb-4">
+                                <div class="timeline-box-1 w-16 h-16 bg-red-500 rounded"></div>
+                                <div class="timeline-box-2 w-16 h-16 bg-blue-500 rounded"></div>
+                                <div class="timeline-box-3 w-16 h-16 bg-green-500 rounded"></div>
+                                <div class="timeline-box-4 w-16 h-16 bg-yellow-500 rounded"></div>
+                            </div>
+                            <div class="timeline-track mb-4">
+                                <div class="timeline-progress w-0"></div>
+                                <div class="timeline-marker" style="left: 0%"></div>
+                            </div>
+                            <div class="flex justify-center space-x-2">
+                                <button class="timeline-play-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                    播放
+                                </button>
+                                <button class="timeline-pause-btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                                    暫停
+                                </button>
+                                <button class="timeline-reverse-btn bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                                    反向
+                                </button>
+                                <button class="timeline-restart-btn bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                    重啟
+                                </button>
+                            </div>
+                        </div>
+                        <div class="code-block text-xs">
+const tl = gsap.timeline({repeat: -1, yoyo: true});
+tl.to(".box1", {x: 100, duration: 1})
+  .to(".box2", {y: 50, duration: 1}, "-=0.5")
+  .to(".box3", {rotation: 360, duration: 1}, "<")
+  .to(".box4", {scale: 1.5, duration: 1}, "+=0.5");
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 緩動函數 (Easing) -->
+        <section class="py-16 section-gradient">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">緩動函數 (Easing)</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 基本緩動 -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h4 class="font-semibold mb-4">Power 緩動</h4>
+                        <div class="ease-demo-power w-full h-4 bg-gray-200 rounded mb-2">
+                            <div class="ease-ball-power w-4 h-4 bg-blue-500 rounded-full"></div>
+                        </div>
+                        <select class="power-ease-select w-full p-2 border rounded mb-2">
+                            <option value="power0">Power0 (Linear)</option>
+                            <option value="power1">Power1</option>
+                            <option value="power2" selected>Power2</option>
+                            <option value="power3">Power3</option>
+                            <option value="power4">Power4</option>
+                        </select>
+                        <button class="ease-power-btn w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                            測試緩動
+                        </button>
+                    </div>
+
+                    <!-- 彈性緩動 -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h4 class="font-semibold mb-4">Elastic 緩動</h4>
+                        <div class="ease-demo-elastic w-full h-4 bg-gray-200 rounded mb-2">
+                            <div class="ease-ball-elastic w-4 h-4 bg-green-500 rounded-full"></div>
+                        </div>
+                        <button class="ease-elastic-btn w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+                            彈性效果
+                        </button>
+                    </div>
+
+                    <!-- 彈跳緩動 -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h4 class="font-semibold mb-4">Bounce 緩動</h4>
+                        <div class="ease-demo-bounce w-full h-4 bg-gray-200 rounded mb-2">
+                            <div class="ease-ball-bounce w-4 h-4 bg-purple-500 rounded-full"></div>
+                        </div>
+                        <button class="ease-bounce-btn w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">
+                            彈跳效果
+                        </button>
+                    </div>
+
+                    <!-- Back 緩動 -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h4 class="font-semibold mb-4">Back 緩動</h4>
+                        <div class="ease-demo-back w-full h-4 bg-gray-200 rounded mb-2">
+                            <div class="ease-ball-back w-4 h-4 bg-pink-500 rounded-full"></div>
+                        </div>
+                        <button class="ease-back-btn w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600">
+                            回彈效果
+                        </button>
+                    </div>
+
+                    <!-- 自定義緩動 (CustomEase) -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h4 class="font-semibold mb-4">CustomEase</h4>
+                        <div class="ease-demo-custom w-full h-4 bg-gray-200 rounded mb-2">
+                            <div class="ease-ball-custom w-4 h-4 bg-indigo-500 rounded-full"></div>
+                        </div>
+                        <button class="ease-custom-btn w-full bg-indigo-500 text-white py-2 rounded hover:bg-indigo-600">
+                            自定義曲線
+                        </button>
+                    </div>
+
+                    <!-- 步進緩動 -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h4 class="font-semibold mb-4">Steps 緩動</h4>
+                        <div class="ease-demo-steps w-full h-4 bg-gray-200 rounded mb-2">
+                            <div class="ease-ball-steps w-4 h-4 bg-orange-500 rounded-full"></div>
+                        </div>
+                        <button class="ease-steps-btn w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600">
+                            步進動畫
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 插件展示 (Plugins) -->
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">插件功能 (Plugins)</h2>
+                
+                <!-- ScrollTrigger -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-4">ScrollTrigger</h3>
+                    <div class="space-y-24">
+                        <!-- 基本滾動觸發 -->
+                        <div class="scroll-trigger-demo-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-12 rounded-lg opacity-0 transform translate-y-20">
+                            <h4 class="text-2xl font-bold mb-4">滾動觸發動畫</h4>
+                            <p>當你滾動到這裡時，這個區塊會淡入並向上移動</p>
+                        </div>
+
+                        <!-- 固定元素 -->
+                        <div class="scroll-trigger-pin relative h-[150vh] bg-gray-100 rounded-lg p-8">
+                            <div class="pin-element bg-white p-8 rounded-lg shadow-lg max-w-md">
+                                <h4 class="text-xl font-bold mb-4">固定元素</h4>
+                                <p>這個元素會在滾動時固定在畫面上</p>
+                                <div class="pin-progress-bar h-2 bg-gray-200 rounded mt-4">
+                                    <div class="pin-progress-fill h-full bg-blue-500 rounded w-0"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 視差效果 -->
+                        <div class="parallax-container relative h-96 overflow-hidden rounded-lg">
+                            <div class="parallax-layer-1 absolute inset-0 bg-gradient-to-b from-blue-400 to-blue-600"></div>
+                            <div class="parallax-layer-2 absolute inset-0 flex items-center justify-center">
+                                <h4 class="text-4xl font-bold text-white">視差滾動</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MotionPath -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-4">MotionPathPlugin</h3>
+                    <div class="bg-gray-50 p-8 rounded-lg">
+                        <svg width="100%" height="300" viewBox="0 0 800 300">
+                            <path class="motion-path" d="M50,150 Q200,50 350,150 T650,150"></path>
+                            <circle class="motion-follower" r="20" fill="#3B82F6">
+                                <animateMotion dur="5s" repeatCount="indefinite">
+                                    <mpath href=".motion-path"/>
+                                </animateMotion>
+                            </circle>
+                        </svg>
+                        <button class="motion-path-btn mt-4 bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                            沿路徑移動
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Draggable -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-4">Draggable</h3>
+                    <div class="draggable-container relative h-64 bg-gray-100 rounded-lg overflow-hidden">
+                        <div class="draggable-item absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg cursor-move flex items-center justify-center text-white font-bold">
+                            拖動我
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flip Plugin -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-4">Flip Plugin</h3>
+                    <div class="flip-container">
+                        <div class="flip-grid mb-4">
+                            <div class="flip-item bg-red-500 text-white p-4 rounded" data-index="1">1</div>
+                            <div class="flip-item bg-blue-500 text-white p-4 rounded" data-index="2">2</div>
+                            <div class="flip-item bg-green-500 text-white p-4 rounded" data-index="3">3</div>
+                            <div class="flip-item bg-yellow-500 text-white p-4 rounded" data-index="4">4</div>
+                            <div class="flip-item bg-purple-500 text-white p-4 rounded" data-index="5">5</div>
+                            <div class="flip-item bg-pink-500 text-white p-4 rounded" data-index="6">6</div>
+                        </div>
+                        <div class="flex justify-center space-x-2">
+                            <button class="flip-shuffle-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                隨機排序
+                            </button>
+                            <button class="flip-sort-btn bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                按順序排列
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 實用功能 (Utility Methods) -->
+        <section class="py-16 section-gradient">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">實用功能與工具</h2>
+                
+                <!-- Staggers -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-4">Staggers (錯開動畫)</h3>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="stagger-grid mb-4">
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                            <div class="stagger-item"></div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="stagger-from-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                從中心開始
+                            </button>
+                            <button class="stagger-from-edges bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                從邊緣開始
+                            </button>
+                            <button class="stagger-random bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                                隨機順序
+                            </button>
+                            <button class="stagger-grid-btn bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                                網格波浪
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Utility Methods -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-4">工具方法 (Utility Methods)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- gsap.utils.random() -->
+                        <div class="utility-demo">
+                            <h4 class="font-semibold mb-3">gsap.utils.random()</h4>
+                            <div class="random-demo flex justify-center items-center h-32 mb-4">
+                                <div class="random-box w-20 h-20 bg-blue-500 rounded"></div>
+                            </div>
+                            <button class="random-btn w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                                隨機位置與顏色
+                            </button>
+                            <div class="code-block mt-4 text-xs">
+gsap.to(".box", {
+  x: gsap.utils.random(-100, 100),
+  y: gsap.utils.random(-50, 50),
+  backgroundColor: gsap.utils.random(["#ef4444", "#3b82f6", "#10b981"])
+});
+                            </div>
+                        </div>
+
+                        <!-- gsap.utils.toArray() -->
+                        <div class="utility-demo">
+                            <h4 class="font-semibold mb-3">gsap.utils.toArray()</h4>
+                            <div class="toarray-demo flex justify-center space-x-2 mb-4">
+                                <div class="array-item w-12 h-12 bg-purple-500 rounded"></div>
+                                <div class="array-item w-12 h-12 bg-purple-500 rounded"></div>
+                                <div class="array-item w-12 h-12 bg-purple-500 rounded"></div>
+                            </div>
+                            <button class="toarray-btn w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600">
+                                批量動畫
+                            </button>
+                        </div>
+
+                        <!-- gsap.utils.mapRange() -->
+                        <div class="utility-demo">
+                            <h4 class="font-semibold mb-3">gsap.utils.mapRange()</h4>
+                            <div class="maprange-demo mb-4">
+                                <input type="range" class="maprange-slider w-full" min="0" max="100" value="50">
+                                <div class="maprange-output text-center mt-2 text-2xl font-bold">50</div>
+                            </div>
+                            <p class="text-sm text-gray-600">將 0-100 映射到 0-360 度</p>
+                        </div>
+
+                        <!-- gsap.utils.snap() -->
+                        <div class="utility-demo">
+                            <h4 class="font-semibold mb-3">gsap.utils.snap()</h4>
+                            <div class="snap-demo flex justify-center items-center h-32 mb-4">
+                                <div class="snap-box w-20 h-20 bg-green-500 rounded"></div>
+                            </div>
+                            <button class="snap-btn w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
+                                吸附到網格
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Helper Functions -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-4">輔助函數</h3>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- gsap.set() -->
+                            <div class="text-center">
+                                <div class="set-demo w-20 h-20 bg-red-500 rounded mx-auto mb-4"></div>
+                                <button class="set-btn bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                                    立即設置屬性
+                                </button>
+                            </div>
+
+                            <!-- gsap.killTweensOf() -->
+                            <div class="text-center">
+                                <div class="kill-demo w-20 h-20 bg-blue-500 rounded mx-auto mb-4"></div>
+                                <button class="kill-start-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-2">
+                                    開始循環動畫
+                                </button>
+                                <button class="kill-stop-btn bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                                    停止動畫
+                                </button>
+                            </div>
+
+                            <!-- gsap.getProperty() -->
+                            <div class="text-center">
+                                <div class="getprop-demo w-20 h-20 bg-green-500 rounded mx-auto mb-4"></div>
+                                <button class="getprop-btn bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                    獲取屬性值
+                                </button>
+                                <div class="getprop-output mt-2 text-sm text-gray-600"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. React 整合 -->
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">React 整合 - useGSAP</h2>
+                
+                <div class="bg-gray-50 p-8 rounded-lg">
+                    <p class="text-lg mb-6">
+                        useGSAP 是 GSAP 官方提供的 React Hook，自動處理動畫清理和生命週期管理。
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-semibold mb-4">安裝方式：</h4>
+                            <div class="code-block mb-4">
+npm install @gsap/react
+                            </div>
+                            
+                            <h4 class="font-semibold mb-4">基本用法：</h4>
+                            <div class="code-block text-xs">
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+
+function MyComponent() {
+  const container = useRef();
+  
+  useGSAP(() => {
+    gsap.to(".box", {
+      rotation: 360,
+      duration: 2,
+      repeat: -1
+    });
+  }, { scope: container });
+  
+  return &lt;div ref={container}&gt;
+    &lt;div className="box" /&gt;
+  &lt;/div&gt;;
+}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold mb-4">進階特性：</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-2">✓</span>
+                                    <span>自動清理動畫，防止記憶體洩漏</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-2">✓</span>
+                                    <span>支援依賴陣列，類似 useEffect</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-2">✓</span>
+                                    <span>範圍限定 (scope) 功能</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-2">✓</span>
+                                    <span>支援 Context 安全選擇器</span>
+                                </li>
+                            </ul>
+                            
+                            <div class="mt-6 p-4 bg-blue-50 rounded">
+                                <p class="text-sm text-blue-800">
+                                    <strong>提示：</strong>useGSAP 會在組件卸載時自動調用 kill() 方法，
+                                    確保所有動畫都被正確清理。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 完整範例 -->
+        <section class="py-16 section-gradient">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">綜合範例</h2>
+                
+                <!-- 複雜動畫展示 -->
+                <div class="complex-demo bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-6 text-center">組合多個功能的動畫</h3>
+                    
+                    <div class="complex-scene relative h-96 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg overflow-hidden">
+                        <!-- 場景元素 -->
+                        <div class="sun absolute top-8 right-8 w-16 h-16 bg-yellow-400 rounded-full"></div>
+                        <div class="cloud-1 absolute top-12 left-20 w-24 h-12 bg-white rounded-full opacity-80"></div>
+                        <div class="cloud-2 absolute top-20 right-32 w-32 h-16 bg-white rounded-full opacity-70"></div>
+                        <div class="bird absolute top-32 left-10 text-2xl">🦅</div>
+                        <div class="tree absolute bottom-0 left-1/4 text-6xl">🌳</div>
+                        <div class="car absolute bottom-8 left-0 text-4xl">🚗</div>
+                    </div>
+                    
+                    <div class="flex justify-center mt-6 space-x-4">
+                        <button class="complex-play-btn bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-shadow">
+                            播放完整動畫
+                        </button>
+                        <button class="complex-reset-btn bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-600">
+                            重置場景
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h3 class="text-2xl font-bold mb-4">GSAP 資源連結</h3>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="https://gsap.com" class="hover:text-green-400 transition-colors">官方網站</a>
+                    <a href="https://gsap.com/docs" class="hover:text-green-400 transition-colors">文檔</a>
+                    <a href="https://gsap.com/community" class="hover:text-green-400 transition-colors">社群</a>
+                    <a href="https://codepen.io/GreenSock" class="hover:text-green-400 transition-colors">CodePen</a>
+                </div>
+                <p class="text-gray-400">
+                    GSAP 3.12.5 - The Professional-Grade JavaScript Animation Library
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // 註冊所有插件
+        gsap.registerPlugin(ScrollTrigger, TextPlugin, Draggable, MotionPathPlugin, ScrollToPlugin, CustomEase, Flip, Observer);
+
+        // 等待 DOM 載入完成
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('GSAP 完整功能展示初始化中...');
+            
+            // 初始化各個功能區塊
+            initBasicAnimations();
+            initTimelineDemo();
+            initEasingDemo();
+            initScrollTriggerDemo();
+            initPluginsDemo();
+            initUtilityMethods();
+            initComplexDemo();
+        });
+
+        // 1. 基礎動畫功能
+        function initBasicAnimations() {
+            // gsap.to()
+            document.querySelector('.tween-to-btn').addEventListener('click', () => {
+                gsap.to('.tween-to-demo', {
+                    x: 100,
+                    rotation: 360,
+                    duration: 2,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        gsap.to('.tween-to-demo', {x: 0, rotation: 0, duration: 1});
+                    }
+                });
+            });
+
+            // gsap.from()
+            document.querySelector('.tween-from-btn').addEventListener('click', () => {
+                gsap.from('.tween-from-demo', {
+                    y: -100,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "bounce.out"
+                });
+            });
+
+            // gsap.fromTo()
+            document.querySelector('.tween-fromto-btn').addEventListener('click', () => {
+                gsap.fromTo('.tween-fromto-demo',
+                    {scale: 0, rotation: -180},
+                    {scale: 1, rotation: 0, duration: 1.5, ease: "elastic.out(1, 0.3)"}
+                );
+            });
+        }
+
+        // 2. Timeline 展示
+        function initTimelineDemo() {
+            let tl = null;
+            
+            const createTimeline = () => {
+                tl = gsap.timeline({
+                    onUpdate: updateProgress,
+                    onComplete: () => console.log('Timeline 完成')
+                });
+                
+                tl.to('.timeline-box-1', {x: 100, duration: 1})
+                  .to('.timeline-box-2', {y: 50, duration: 1}, "-=0.5")
+                  .to('.timeline-box-3', {rotation: 360, duration: 1}, "<")
+                  .to('.timeline-box-4', {scale: 1.5, duration: 1}, "+=0.5")
+                  .to('.timeline-box-1, .timeline-box-2, .timeline-box-3, .timeline-box-4', {
+                      x: 0, y: 0, rotation: 0, scale: 1, duration: 1
+                  });
+                
+                return tl;
+            };
+            
+            const updateProgress = () => {
+                if (tl) {
+                    const progress = tl.progress() * 100;
+                    gsap.set('.timeline-progress', {width: `${progress}%`});
+                    gsap.set('.timeline-marker', {left: `${progress}%`});
+                }
+            };
+            
+            document.querySelector('.timeline-play-btn').addEventListener('click', () => {
+                if (!tl) tl = createTimeline();
+                tl.play();
+            });
+            
+            document.querySelector('.timeline-pause-btn').addEventListener('click', () => {
+                if (tl) tl.pause();
+            });
+            
+            document.querySelector('.timeline-reverse-btn').addEventListener('click', () => {
+                if (tl) tl.reverse();
+            });
+            
+            document.querySelector('.timeline-restart-btn').addEventListener('click', () => {
+                if (tl) tl.restart();
+            });
+        }
+
+        // 3. 緩動函數展示
+        function initEasingDemo() {
+            // Power 緩動
+            document.querySelector('.ease-power-btn').addEventListener('click', () => {
+                const easeType = document.querySelector('.power-ease-select').value;
+                gsap.fromTo('.ease-ball-power',
+                    {x: 0},
+                    {x: 250, duration: 2, ease: easeType, onComplete: () => {
+                        gsap.set('.ease-ball-power', {x: 0});
+                    }}
+                );
+            });
+
+            // Elastic 緩動
+            document.querySelector('.ease-elastic-btn').addEventListener('click', () => {
+                gsap.fromTo('.ease-ball-elastic',
+                    {x: 0},
+                    {x: 250, duration: 2, ease: "elastic.out(1, 0.3)", onComplete: () => {
+                        gsap.set('.ease-ball-elastic', {x: 0});
+                    }}
+                );
+            });
+
+            // Bounce 緩動
+            document.querySelector('.ease-bounce-btn').addEventListener('click', () => {
+                gsap.fromTo('.ease-ball-bounce',
+                    {x: 0},
+                    {x: 250, duration: 2, ease: "bounce.out", onComplete: () => {
+                        gsap.set('.ease-ball-bounce', {x: 0});
+                    }}
+                );
+            });
+
+            // Back 緩動
+            document.querySelector('.ease-back-btn').addEventListener('click', () => {
+                gsap.fromTo('.ease-ball-back',
+                    {x: 0},
+                    {x: 250, duration: 2, ease: "back.out(1.7)", onComplete: () => {
+                        gsap.set('.ease-ball-back', {x: 0});
+                    }}
+                );
+            });
+
+            // CustomEase
+            document.querySelector('.ease-custom-btn').addEventListener('click', () => {
+                // 創建自定義緩動曲線
+                CustomEase.create("myEase", "M0,0 C0.126,0.382 0.282,0.674 0.44,0.822 0.632,1.002 0.818,1.001 1,1");
+                
+                gsap.fromTo('.ease-ball-custom',
+                    {x: 0},
+                    {x: 250, duration: 2, ease: "myEase", onComplete: () => {
+                        gsap.set('.ease-ball-custom', {x: 0});
+                    }}
+                );
+            });
+
+            // Steps 緩動
+            document.querySelector('.ease-steps-btn').addEventListener('click', () => {
+                gsap.fromTo('.ease-ball-steps',
+                    {x: 0},
+                    {x: 250, duration: 2, ease: "steps(5)", onComplete: () => {
+                        gsap.set('.ease-ball-steps', {x: 0});
+                    }}
+                );
+            });
+        }
+
+        // 4. ScrollTrigger 展示
+        function initScrollTriggerDemo() {
+            // 基本滾動觸發
+            gsap.to('.scroll-trigger-demo-1', {
+                scrollTrigger: {
+                    trigger: '.scroll-trigger-demo-1',
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1
+            });
+
+            // 固定元素
+            ScrollTrigger.create({
+                trigger: '.scroll-trigger-pin',
+                pin: '.pin-element',
+                start: 'top top',
+                end: 'bottom bottom',
+                onUpdate: (self) => {
+                    gsap.set('.pin-progress-fill', {width: `${self.progress * 100}%`});
+                }
+            });
+
+            // 視差效果
+            gsap.to('.parallax-layer-1', {
+                scrollTrigger: {
+                    trigger: '.parallax-container',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                y: -100
+            });
+
+            gsap.to('.parallax-layer-2', {
+                scrollTrigger: {
+                    trigger: '.parallax-container',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                y: 50
+            });
+        }
+
+        // 5. 插件功能展示
+        function initPluginsDemo() {
+            // MotionPath
+            document.querySelector('.motion-path-btn').addEventListener('click', () => {
+                gsap.to('.motion-follower', {
+                    duration: 5,
+                    repeat: -1,
+                    ease: "none",
+                    motionPath: {
+                        path: '.motion-path',
+                        align: '.motion-path',
+                        alignOrigin: [0.5, 0.5]
+                    }
+                });
+            });
+
+            // Draggable
+            Draggable.create('.draggable-item', {
+                bounds: '.draggable-container',
+                inertia: true,
+                onDrag: function() {
+                    gsap.to(this.target, {scale: 1.1, duration: 0.2});
+                },
+                onRelease: function() {
+                    gsap.to(this.target, {scale: 1, duration: 0.2});
+                }
+            });
+
+            // Flip Plugin
+            const flipContainer = document.querySelector('.flip-grid');
+            
+            document.querySelector('.flip-shuffle-btn').addEventListener('click', () => {
+                const state = Flip.getState('.flip-item');
+                
+                // 打亂順序
+                const items = gsap.utils.toArray('.flip-item');
+                gsap.utils.shuffle(items).forEach(item => flipContainer.appendChild(item));
+                
+                Flip.from(state, {
+                    duration: 0.8,
+                    ease: "power1.inOut",
+                    stagger: 0.05
+                });
+            });
+
+            document.querySelector('.flip-sort-btn').addEventListener('click', () => {
+                const state = Flip.getState('.flip-item');
+                
+                // 按順序排列
+                const items = gsap.utils.toArray('.flip-item');
+                items.sort((a, b) => a.dataset.index - b.dataset.index);
+                items.forEach(item => flipContainer.appendChild(item));
+                
+                Flip.from(state, {
+                    duration: 0.8,
+                    ease: "power1.inOut"
+                });
+            });
+        }
+
+        // 6. 工具方法展示
+        function initUtilityMethods() {
+            // Stagger 動畫
+            document.querySelector('.stagger-from-center').addEventListener('click', () => {
+                gsap.fromTo('.stagger-item',
+                    {scale: 0, opacity: 0},
+                    {
+                        scale: 1,
+                        opacity: 1,
+                        duration: 0.5,
+                        stagger: {
+                            from: "center",
+                            amount: 1
+                        }
+                    }
+                );
+            });
+
+            document.querySelector('.stagger-from-edges').addEventListener('click', () => {
+                gsap.fromTo('.stagger-item',
+                    {scale: 0, opacity: 0},
+                    {
+                        scale: 1,
+                        opacity: 1,
+                        duration: 0.5,
+                        stagger: {
+                            from: "edges",
+                            amount: 1
+                        }
+                    }
+                );
+            });
+
+            document.querySelector('.stagger-random').addEventListener('click', () => {
+                gsap.fromTo('.stagger-item',
+                    {scale: 0, opacity: 0},
+                    {
+                        scale: 1,
+                        opacity: 1,
+                        duration: 0.5,
+                        stagger: {
+                            from: "random",
+                            amount: 1
+                        }
+                    }
+                );
+            });
+
+            document.querySelector('.stagger-grid-btn').addEventListener('click', () => {
+                gsap.fromTo('.stagger-item',
+                    {scale: 0, opacity: 0},
+                    {
+                        scale: 1,
+                        opacity: 1,
+                        duration: 0.5,
+                        stagger: {
+                            grid: [2, 6],
+                            from: "center",
+                            amount: 1.5
+                        }
+                    }
+                );
+            });
+
+            // Random 工具
+            document.querySelector('.random-btn').addEventListener('click', () => {
+                gsap.to('.random-box', {
+                    x: gsap.utils.random(-100, 100, 5),
+                    y: gsap.utils.random(-50, 50, 5),
+                    backgroundColor: gsap.utils.random(['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6']),
+                    duration: 0.5
+                });
+            });
+
+            // toArray 工具
+            document.querySelector('.toarray-btn').addEventListener('click', () => {
+                const items = gsap.utils.toArray('.array-item');
+                gsap.to(items, {
+                    y: -20,
+                    rotation: 360,
+                    duration: 0.5,
+                    stagger: 0.1,
+                    yoyo: true,
+                    repeat: 1
+                });
+            });
+
+            // mapRange 工具
+            const slider = document.querySelector('.maprange-slider');
+            const output = document.querySelector('.maprange-output');
+            slider.addEventListener('input', (e) => {
+                const mappedValue = gsap.utils.mapRange(0, 100, 0, 360, e.target.value);
+                output.textContent = Math.round(mappedValue) + '°';
+                gsap.to(output, {
+                    color: `hsl(${mappedValue}, 70%, 50%)`,
+                    duration: 0.2
+                });
+            });
+
+            // snap 工具
+            document.querySelector('.snap-btn').addEventListener('click', () => {
+                const snapTo = gsap.utils.snap(50); // 吸附到 50 的倍數
+                const randomX = gsap.utils.random(-150, 150);
+                const snappedX = snapTo(randomX);
+                
+                gsap.to('.snap-box', {
+                    x: snappedX,
+                    duration: 0.5,
+                    ease: "power2.inOut"
+                });
+            });
+
+            // set 方法
+            document.querySelector('.set-btn').addEventListener('click', () => {
+                gsap.set('.set-demo', {
+                    backgroundColor: gsap.utils.random(['#ef4444', '#3b82f6', '#10b981']),
+                    scale: gsap.utils.random(0.5, 1.5),
+                    rotation: gsap.utils.random(-180, 180)
+                });
+            });
+
+            // kill 方法
+            let killTween = null;
+            document.querySelector('.kill-start-btn').addEventListener('click', () => {
+                killTween = gsap.to('.kill-demo', {
+                    rotation: 360,
+                    duration: 2,
+                    repeat: -1,
+                    ease: "none"
+                });
+            });
+
+            document.querySelector('.kill-stop-btn').addEventListener('click', () => {
+                if (killTween) {
+                    killTween.kill();
+                    gsap.set('.kill-demo', {rotation: 0});
+                }
+            });
+
+            // getProperty 方法
+            document.querySelector('.getprop-btn').addEventListener('click', () => {
+                gsap.to('.getprop-demo', {
+                    x: 100,
+                    rotation: 45,
+                    scale: 1.5,
+                    duration: 1,
+                    onComplete: () => {
+                        const x = gsap.getProperty('.getprop-demo', 'x');
+                        const rotation = gsap.getProperty('.getprop-demo', 'rotation');
+                        const scale = gsap.getProperty('.getprop-demo', 'scale');
+                        document.querySelector('.getprop-output').textContent = 
+                            `x: ${x}px, rotation: ${rotation}°, scale: ${scale}`;
+                    }
+                });
+            });
+        }
+
+        // 7. 複雜動畫展示
+        function initComplexDemo() {
+            document.querySelector('.complex-play-btn').addEventListener('click', () => {
+                const tl = gsap.timeline();
+                
+                // 太陽旋轉
+                tl.to('.sun', {
+                    rotation: 360,
+                    duration: 10,
+                    repeat: -1,
+                    ease: "none"
+                }, 0);
+                
+                // 雲朵飄動
+                tl.to('.cloud-1', {
+                    x: 300,
+                    duration: 15,
+                    repeat: -1,
+                    ease: "none"
+                }, 0);
+                
+                tl.to('.cloud-2', {
+                    x: -200,
+                    duration: 20,
+                    repeat: -1,
+                    ease: "none"
+                }, 0);
+                
+                // 鳥飛行（沿路徑）
+                tl.to('.bird', {
+                    duration: 8,
+                    repeat: -1,
+                    ease: "none",
+                    motionPath: {
+                        path: [{x: 0, y: 0}, {x: 200, y: -50}, {x: 400, y: 0}, {x: 200, y: 50}, {x: 0, y: 0}],
+                        curviness: 1.5
+                    }
+                }, 0);
+                
+                // 樹搖擺
+                tl.to('.tree', {
+                    rotation: 5,
+                    transformOrigin: "bottom center",
+                    duration: 2,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "power1.inOut"
+                }, 0);
+                
+                // 車子行駛
+                tl.to('.car', {
+                    x: 600,
+                    duration: 5,
+                    ease: "none",
+                    repeat: -1,
+                    onRepeat: function() {
+                        gsap.set('.car', {x: -100});
+                    }
+                }, 0);
+            });
+            
+            document.querySelector('.complex-reset-btn').addEventListener('click', () => {
+                // 停止所有動畫並重置
+                gsap.killTweensOf('.sun, .cloud-1, .cloud-2, .bird, .tree, .car');
+                gsap.set('.sun, .cloud-1, .cloud-2, .bird, .tree, .car', {
+                    clearProps: "all"
+                });
+            });
+        }
+
+        // 快速開始按鈕
+        document.querySelector('.quick-start-btn').addEventListener('click', () => {
+            gsap.to(window, {
+                duration: 1,
+                scrollTo: "#basic",
+                ease: "power2.inOut"
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP 功能展示 - 修正版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP 核心庫和免費插件 -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/EasePack.min.js"></script>
+    
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .demo-box {
+            transition: all 0.3s ease;
+        }
+        .demo-box:hover {
+            transform: scale(1.05);
+        }
+        .free-badge {
+            background: linear-gradient(45deg, #10B981, #059669);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .char {
+            display: inline-block;
+        }
+        .physics-ball {
+            position: absolute;
+            border-radius: 50%;
+        }
+        .morphing-path {
+            transition: d 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- 導航欄 -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-800">GSAP 展示中心</h1>
+                    <span class="free-badge">2024 更新！</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#basic" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">基礎動畫</a>
+                        <a href="#scroll" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">滾動效果</a>
+                        <a href="#text" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">文字動畫</a>
+                        <a href="#svg" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">SVG 動畫</a>
+                        <a href="#advanced" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">進階效果</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要內容 -->
+    <main class="pt-16">
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="hero-title text-5xl md:text-6xl font-bold mb-6 opacity-0">
+                    GSAP 功能展示
+                </h1>
+                <p class="hero-subtitle text-xl md:text-2xl mb-8 opacity-0">
+                    探索最強大的網頁動畫工具
+                </p>
+                <div class="hero-announcement bg-white/20 backdrop-blur-sm rounded-lg p-6 mb-8 opacity-0">
+                    <h3 class="text-xl font-semibold mb-2">🎉 重大更新</h3>
+                    <p class="text-sm">GSAP 被 Webflow 收購，許多付費插件現在免費開放！</p>
+                </div>
+                <button class="hero-btn bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors opacity-0">
+                    開始探索
+                </button>
+            </div>
+        </section>
+
+        <!-- 基礎動畫展示 -->
+        <section id="basic" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">基礎動畫方法</h2>
+                    <p class="text-xl text-gray-600">GSAP 的核心功能</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- gsap.to() -->
+                    <div class="demo-box bg-gradient-to-br from-blue-400 to-blue-600 p-6 rounded-lg shadow-lg text-white text-center">
+                        <h3 class="text-xl font-semibold mb-4">gsap.to()</h3>
+                        <div class="to-demo w-16 h-16 bg-white rounded-lg mx-auto mb-4"></div>
+                        <p class="text-sm mb-4">動畫到指定狀態</p>
+                        <button class="to-btn bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+                            執行動畫
+                        </button>
+                    </div>
+
+                    <!-- gsap.from() -->
+                    <div class="demo-box bg-gradient-to-br from-green-400 to-green-600 p-6 rounded-lg shadow-lg text-white text-center">
+                        <h3 class="text-xl font-semibold mb-4">gsap.from()</h3>
+                        <div class="from-demo w-16 h-16 bg-white rounded-lg mx-auto mb-4"></div>
+                        <p class="text-sm mb-4">從指定狀態開始</p>
+                        <button class="from-btn bg-white text-green-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+                            執行動畫
+                        </button>
+                    </div>
+
+                    <!-- gsap.fromTo() -->
+                    <div class="demo-box bg-gradient-to-br from-purple-400 to-purple-600 p-6 rounded-lg shadow-lg text-white text-center">
+                        <h3 class="text-xl font-semibold mb-4">gsap.fromTo()</h3>
+                        <div class="fromto-demo w-16 h-16 bg-white rounded-lg mx-auto mb-4"></div>
+                        <p class="text-sm mb-4">完全控制起終點</p>
+                        <button class="fromto-btn bg-white text-purple-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+                            執行動畫
+                        </button>
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="demo-box bg-gradient-to-br from-orange-400 to-orange-600 p-6 rounded-lg shadow-lg text-white text-center">
+                        <h3 class="text-xl font-semibold mb-4">Timeline</h3>
+                        <div class="timeline-demo flex justify-center space-x-2 mb-4">
+                            <div class="tl-box w-4 h-4 bg-white rounded"></div>
+                            <div class="tl-box w-4 h-4 bg-white rounded"></div>
+                            <div class="tl-box w-4 h-4 bg-white rounded"></div>
+                        </div>
+                        <p class="text-sm mb-4">序列動畫</p>
+                        <button class="timeline-btn bg-white text-orange-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+                            播放序列
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 滾動觸發效果 -->
+        <section id="scroll" class="py-20 bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">ScrollTrigger 滾動效果</h2>
+                    <p class="text-xl text-gray-600">滾動時觸發的精彩動畫</p>
+                </div>
+                
+                <div class="space-y-32">
+                    <!-- 視差效果 -->
+                    <div class="relative h-96 overflow-hidden rounded-lg shadow-lg">
+                        <div class="parallax-bg absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                        <div class="relative z-10 flex items-center justify-center h-full">
+                            <h3 class="parallax-text text-4xl font-bold text-white">視差滾動效果</h3>
+                        </div>
+                    </div>
+
+                    <!-- 漸進顯示 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="fade-in-box bg-white rounded-lg shadow-lg p-8 opacity-0 transform translate-y-20">
+                            <h4 class="text-xl font-bold mb-4 text-gray-800">淡入效果</h4>
+                            <p class="text-gray-600">滾動到這裡時會淡入顯示</p>
+                        </div>
+                        <div class="fade-in-box bg-white rounded-lg shadow-lg p-8 opacity-0 transform translate-y-20">
+                            <h4 class="text-xl font-bold mb-4 text-gray-800">延遲淡入</h4>
+                            <p class="text-gray-600">稍微延遲後淡入</p>
+                        </div>
+                        <div class="fade-in-box bg-white rounded-lg shadow-lg p-8 opacity-0 transform translate-y-20">
+                            <h4 class="text-xl font-bold mb-4 text-gray-800">最後淡入</h4>
+                            <p class="text-gray-600">最後一個淡入的元素</p>
+                        </div>
+                    </div>
+
+                    <!-- 固定元素效果 -->
+                    <div class="pin-section relative h-[200vh] bg-gradient-to-b from-pink-100 to-purple-100 rounded-lg p-8">
+                        <div class="pin-content sticky top-32 bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto">
+                            <h4 class="text-2xl font-bold mb-4">固定滾動效果</h4>
+                            <p class="text-gray-600">這個區塊會在滾動時固定在畫面上，創造特殊的視覺效果</p>
+                            <div class="pin-progress mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="pin-progress-bar h-full bg-purple-600 w-0"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 文字動畫 -->
+        <section id="text" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">文字動畫效果</h2>
+                    <p class="text-xl text-gray-600">讓文字活起來</p>
+                </div>
+                
+                <div class="space-y-12">
+                    <!-- 打字機效果 -->
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-6">打字機效果</h3>
+                        <div class="typewriter-container bg-gray-900 text-green-400 p-8 rounded-lg font-mono text-xl">
+                            <span class="typewriter-text"></span>
+                            <span class="typewriter-cursor">|</span>
+                        </div>
+                        <button class="typewriter-btn mt-4 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+                            開始打字
+                        </button>
+                    </div>
+
+                    <!-- 字符分解動畫 -->
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-6">字符分解動畫</h3>
+                        <div class="split-text-container">
+                            <h4 class="split-text text-4xl font-bold text-purple-600 mb-4">
+                                GSAP 讓動畫變簡單！
+                            </h4>
+                        </div>
+                        <button class="split-btn mt-4 bg-purple-500 text-white px-6 py-2 rounded-md hover:bg-purple-600">
+                            分解文字
+                        </button>
+                    </div>
+
+                    <!-- 文字變形效果 -->
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-6">文字變形效果</h3>
+                        <div class="morph-text-container bg-gradient-to-r from-blue-500 to-purple-600 text-white p-8 rounded-lg">
+                            <h4 class="morph-text text-3xl font-bold">創新</h4>
+                        </div>
+                        <button class="morph-btn mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-md hover:shadow-lg">
+                            變換文字
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SVG 動畫 -->
+        <section id="svg" class="py-20 bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">SVG 動畫展示</h2>
+                    <p class="text-xl text-gray-600">向量圖形的動態魅力</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 路徑動畫 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">路徑繪製動畫</h3>
+                        <svg class="mx-auto mb-6" width="300" height="200" viewBox="0 0 300 200">
+                            <path class="draw-path" d="M50 100 Q100 50 150 100 T250 100" 
+                                  stroke="#3B82F6" 
+                                  stroke-width="3" 
+                                  fill="none"
+                                  stroke-dasharray="1000"
+                                  stroke-dashoffset="1000"/>
+                        </svg>
+                        <button class="draw-btn bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+                            開始繪製
+                        </button>
+                    </div>
+
+                    <!-- 形狀變換 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">形狀變換動畫</h3>
+                        <svg class="mx-auto mb-6" width="300" height="200" viewBox="0 0 300 200">
+                            <rect class="morph-shape" x="100" y="50" width="100" height="100" rx="0" fill="#10B981"/>
+                        </svg>
+                        <button class="morph-shape-btn bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+                            變換形狀
+                        </button>
+                    </div>
+
+                    <!-- 圖標動畫 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">圖標動畫</h3>
+                        <svg class="mx-auto mb-6" width="100" height="100" viewBox="0 0 24 24">
+                            <g class="icon-group">
+                                <circle cx="12" cy="12" r="10" fill="none" stroke="#8B5CF6" stroke-width="2"/>
+                                <path d="M12 6 L12 12 L16 16" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round"/>
+                            </g>
+                        </svg>
+                        <button class="icon-btn bg-purple-500 text-white px-6 py-2 rounded-md hover:bg-purple-600">
+                            旋轉圖標
+                        </button>
+                    </div>
+
+                    <!-- 動態圖表 -->
+                    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">動態圖表</h3>
+                        <svg class="mx-auto mb-6" width="300" height="200" viewBox="0 0 300 200">
+                            <g class="chart-bars">
+                                <rect class="bar" x="50" y="150" width="40" height="0" fill="#EF4444"/>
+                                <rect class="bar" x="110" y="150" width="40" height="0" fill="#F59E0B"/>
+                                <rect class="bar" x="170" y="150" width="40" height="0" fill="#10B981"/>
+                                <rect class="bar" x="230" y="150" width="40" height="0" fill="#3B82F6"/>
+                            </g>
+                        </svg>
+                        <button class="chart-btn bg-indigo-500 text-white px-6 py-2 rounded-md hover:bg-indigo-600">
+                            動畫圖表
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 進階效果 -->
+        <section id="advanced" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">進階動畫效果</h2>
+                    <p class="text-xl text-gray-600">探索更多可能性</p>
+                </div>
+                
+                <div class="space-y-12">
+                    <!-- 物理動畫模擬 -->
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-6">物理動畫模擬</h3>
+                        <div class="physics-container relative h-64 bg-gray-100 rounded-lg overflow-hidden">
+                            <div class="physics-ball w-12 h-12 bg-red-500 top-4 left-1/2"></div>
+                        </div>
+                        <button class="physics-btn mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600">
+                            投擲小球
+                        </button>
+                    </div>
+
+                    <!-- 3D 翻轉效果 -->
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-6">3D 翻轉效果</h3>
+                        <div class="flip-3d-container flex justify-center">
+                            <div class="flip-card relative w-64 h-64" style="transform-style: preserve-3d;">
+                                <div class="flip-front absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-2xl font-bold" style="backface-visibility: hidden;">
+                                    正面
+                                </div>
+                                <div class="flip-back absolute inset-0 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center text-white text-2xl font-bold" style="backface-visibility: hidden; transform: rotateY(180deg);">
+                                    背面
+                                </div>
+                            </div>
+                        </div>
+                        <button class="flip-3d-btn mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-md hover:shadow-lg">
+                            翻轉卡片
+                        </button>
+                    </div>
+
+                    <!-- 拖曳互動 -->
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-6">拖曳互動效果</h3>
+                        <div class="drag-container relative h-64 bg-gray-100 rounded-lg">
+                            <div class="drag-item absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-gradient-to-br from-pink-500 to-red-500 rounded-lg cursor-move flex items-center justify-center text-white font-bold">
+                                拖我！
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">試試拖曳上面的方塊</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 說明區塊 -->
+        <section class="py-20 bg-gray-800 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-bold mb-8">關於 GSAP 付費插件的說明</h2>
+                <div class="max-w-3xl mx-auto space-y-6 text-lg">
+                    <p>
+                        雖然 Webflow 收購 GSAP 後宣布許多插件免費，但目前這些插件（如 SplitText、MorphSVG、DrawSVG 等）
+                        仍需要透過官方渠道獲取，並非透過公開 CDN 提供。
+                    </p>
+                    <p>
+                        本展示使用 GSAP 核心功能和已公開的免費插件來實現類似效果，
+                        展示了如何用創意的方式達到相似的動畫效果。
+                    </p>
+                    <div class="mt-8">
+                        <a href="https://gsap.com" class="inline-block bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors">
+                            訪問 GSAP 官網
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 註冊插件
+        gsap.registerPlugin(ScrollTrigger, TextPlugin, ScrollToPlugin);
+
+        // 初始化動畫
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hero 動畫
+            const heroTl = gsap.timeline();
+            heroTl.to('.hero-title', {duration: 1, opacity: 1, y: 0, ease: 'power2.out'})
+                  .to('.hero-subtitle', {duration: 0.8, opacity: 1, y: 0, ease: 'power2.out'}, '-=0.5')
+                  .to('.hero-announcement', {duration: 0.8, opacity: 1, y: 0, ease: 'power2.out'}, '-=0.3')
+                  .to('.hero-btn', {duration: 0.5, opacity: 1, y: 0, ease: 'power2.out'}, '-=0.2');
+
+            // 平滑滾動
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        gsap.to(window, {
+                            duration: 1,
+                            scrollTo: {
+                                y: targetElement,
+                                offsetY: 80
+                            },
+                            ease: 'power2.inOut'
+                        });
+                    }
+                });
+            });
+
+            // 基礎動畫
+            setupBasicAnimations();
+            
+            // ScrollTrigger 動畫
+            setupScrollAnimations();
+            
+            // 文字動畫
+            setupTextAnimations();
+            
+            // SVG 動畫
+            setupSVGAnimations();
+            
+            // 進階效果
+            setupAdvancedAnimations();
+        });
+
+        // 基礎動畫設置
+        function setupBasicAnimations() {
+            // gsap.to()
+            document.querySelector('.to-btn').addEventListener('click', () => {
+                gsap.to('.to-demo', {
+                    duration: 1,
+                    x: 50,
+                    rotation: 360,
+                    scale: 1.2,
+                    ease: 'power2.out',
+                    yoyo: true,
+                    repeat: 1
+                });
+            });
+
+            // gsap.from()
+            document.querySelector('.from-btn').addEventListener('click', () => {
+                gsap.from('.from-demo', {
+                    duration: 1,
+                    x: -50,
+                    opacity: 0,
+                    scale: 0,
+                    ease: 'bounce.out'
+                });
+            });
+
+            // gsap.fromTo()
+            document.querySelector('.fromto-btn').addEventListener('click', () => {
+                gsap.fromTo('.fromto-demo', 
+                    {x: -50, opacity: 0, scale: 0},
+                    {x: 50, opacity: 1, scale: 1.5, duration: 1, ease: 'elastic.out(1, 0.3)'}
+                );
+            });
+
+            // Timeline
+            document.querySelector('.timeline-btn').addEventListener('click', () => {
+                const tl = gsap.timeline();
+                tl.to('.tl-box:nth-child(1)', {duration: 0.5, y: -20, backgroundColor: '#ef4444'})
+                  .to('.tl-box:nth-child(2)', {duration: 0.5, y: -20, backgroundColor: '#3b82f6'}, '-=0.3')
+                  .to('.tl-box:nth-child(3)', {duration: 0.5, y: -20, backgroundColor: '#10b981'}, '-=0.3')
+                  .to('.tl-box', {duration: 0.5, y: 0, backgroundColor: '#ffffff'}, '+=0.5');
+            });
+        }
+
+        // ScrollTrigger 動畫
+        function setupScrollAnimations() {
+            // 視差效果
+            gsap.to('.parallax-bg', {
+                scrollTrigger: {
+                    trigger: '.parallax-bg',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                y: -100
+            });
+
+            // 視差文字
+            gsap.to('.parallax-text', {
+                scrollTrigger: {
+                    trigger: '.parallax-text',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                y: 50
+            });
+
+            // 淡入效果
+            gsap.utils.toArray('.fade-in-box').forEach((box, index) => {
+                gsap.to(box, {
+                    scrollTrigger: {
+                        trigger: box,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    delay: index * 0.2,
+                    ease: 'power2.out'
+                });
+            });
+
+            // 固定滾動進度條
+            gsap.to('.pin-progress-bar', {
+                scrollTrigger: {
+                    trigger: '.pin-section',
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: true,
+                    pin: '.pin-content',
+                    pinSpacing: false
+                },
+                width: '100%',
+                ease: 'none'
+            });
+        }
+
+        // 文字動畫設置
+        function setupTextAnimations() {
+            // 打字機效果
+            const texts = [
+                "歡迎來到 GSAP 的世界！",
+                "讓我們一起創造精彩動畫",
+                "GSAP 讓一切變得簡單"
+            ];
+            let currentIndex = 0;
+
+            document.querySelector('.typewriter-btn').addEventListener('click', () => {
+                const text = texts[currentIndex];
+                currentIndex = (currentIndex + 1) % texts.length;
+
+                gsap.to('.typewriter-text', {
+                    duration: 2,
+                    text: text,
+                    ease: 'none'
+                });
+
+                // 游標閃爍
+                gsap.to('.typewriter-cursor', {
+                    duration: 0.5,
+                    opacity: 0,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'power2.inOut'
+                });
+            });
+
+            // 文字分解效果（手動實現）
+            document.querySelector('.split-btn').addEventListener('click', () => {
+                const text = document.querySelector('.split-text');
+                const originalText = text.textContent;
+                const chars = originalText.split('');
+                
+                text.innerHTML = '';
+                chars.forEach(char => {
+                    const span = document.createElement('span');
+                    span.textContent = char === ' ' ? '\u00A0' : char;
+                    span.className = 'char';
+                    text.appendChild(span);
+                });
+
+                gsap.from('.char', {
+                    duration: 0.8,
+                    opacity: 0,
+                    scale: 0,
+                    y: 50,
+                    rotation: 180,
+                    stagger: 0.05,
+                    ease: 'back.out(1.7)'
+                });
+            });
+
+            // 文字變形
+            const morphTexts = ['創新', '科技', '未來', '動畫'];
+            let morphIndex = 0;
+
+            document.querySelector('.morph-btn').addEventListener('click', () => {
+                morphIndex = (morphIndex + 1) % morphTexts.length;
+                
+                gsap.to('.morph-text', {
+                    duration: 0.5,
+                    opacity: 0,
+                    y: -20,
+                    ease: 'power2.in',
+                    onComplete: () => {
+                        document.querySelector('.morph-text').textContent = morphTexts[morphIndex];
+                        gsap.to('.morph-text', {
+                            duration: 0.5,
+                            opacity: 1,
+                            y: 0,
+                            ease: 'power2.out'
+                        });
+                    }
+                });
+            });
+        }
+
+        // SVG 動畫設置
+        function setupSVGAnimations() {
+            // 路徑繪製
+            document.querySelector('.draw-btn').addEventListener('click', () => {
+                gsap.to('.draw-path', {
+                    duration: 2,
+                    strokeDashoffset: 0,
+                    ease: 'power2.inOut'
+                });
+            });
+
+            // 形狀變換
+            let isRounded = false;
+            document.querySelector('.morph-shape-btn').addEventListener('click', () => {
+                isRounded = !isRounded;
+                gsap.to('.morph-shape', {
+                    duration: 0.8,
+                    attr: {
+                        rx: isRounded ? 50 : 0,
+                        ry: isRounded ? 50 : 0
+                    },
+                    ease: 'power2.inOut'
+                });
+            });
+
+            // 圖標旋轉
+            document.querySelector('.icon-btn').addEventListener('click', () => {
+                gsap.to('.icon-group', {
+                    duration: 2,
+                    rotation: 360,
+                    transformOrigin: 'center',
+                    ease: 'power2.inOut'
+                });
+            });
+
+            // 動態圖表
+            document.querySelector('.chart-btn').addEventListener('click', () => {
+                const heights = [80, 120, 60, 100];
+                gsap.to('.bar', {
+                    duration: 1.5,
+                    height: (index) => heights[index],
+                    y: (index) => 150 - heights[index],
+                    stagger: 0.2,
+                    ease: 'bounce.out'
+                });
+            });
+        }
+
+        // 進階動畫設置
+        function setupAdvancedAnimations() {
+            // 物理動畫
+            document.querySelector('.physics-btn').addEventListener('click', () => {
+                const ball = document.querySelector('.physics-ball');
+                
+                // 重置位置
+                gsap.set(ball, {x: 0, y: 0});
+                
+                // 拋物線運動
+                const tl = gsap.timeline();
+                tl.to(ball, {
+                    duration: 1.5,
+                    x: 200,
+                    ease: 'none'
+                })
+                .to(ball, {
+                    duration: 1.5,
+                    y: 200,
+                    ease: 'power2.in'
+                }, 0)
+                .to(ball, {
+                    duration: 0.3,
+                    scaleY: 0.8,
+                    scaleX: 1.2,
+                    ease: 'power2.out',
+                    yoyo: true,
+                    repeat: 1
+                }, 1.5);
+            });
+
+            // 3D 翻轉
+            let isFlipped = false;
+            document.querySelector('.flip-3d-btn').addEventListener('click', () => {
+                isFlipped = !isFlipped;
+                gsap.to('.flip-card', {
+                    duration: 1,
+                    rotationY: isFlipped ? 180 : 0,
+                    ease: 'power2.inOut'
+                });
+            });
+
+            // 拖曳效果（簡化版）
+            const dragItem = document.querySelector('.drag-item');
+            let isDragging = false;
+            let currentX = 0;
+            let currentY = 0;
+            let initialX = 0;
+            let initialY = 0;
+
+            dragItem.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                initialX = e.clientX - currentX;
+                initialY = e.clientY - currentY;
+                
+                gsap.to(dragItem, {
+                    duration: 0.2,
+                    scale: 1.1,
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+                });
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                
+                gsap.set(dragItem, {
+                    x: currentX,
+                    y: currentY
+                });
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                gsap.to(dragItem, {
+                    duration: 0.2,
+                    scale: 1,
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                });
+            });
+        }
+    </script>
+</body>
+</html>
