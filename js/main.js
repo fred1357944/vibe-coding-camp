@@ -1,6 +1,47 @@
-// Default students data (will be overridden by JSON file or localStorage)
+// Default students data with complete information
 let students = {
-    '20250629': [],
+    '20250629': [
+        { 
+            name: 'Amy', 
+            image: '學員成果/20250629/Amy.jpg', 
+            description: 'Amy 的作品展現了對色彩的敏銳掌握，創意十足的設計理念令人印象深刻。',
+            skills: ['UI/UX Design', 'Color Theory', 'Creative Design'],
+            projectTitle: '互動式色彩探索應用',
+            details: 'Amy 開發了一個創新的色彩探索應用，讓使用者能夠直觀地理解色彩理論。該應用結合了現代設計美學與實用功能，獲得了導師的高度評價。'
+        },
+        { 
+            name: 'Brian', 
+            image: '學員成果/20250629/Brian.png', 
+            description: 'Brian 在程式邏輯上展現了卓越的天賦，作品兼具功能性與美觀性。',
+            skills: ['JavaScript', 'React', 'Problem Solving'],
+            projectTitle: '智能任務管理系統',
+            details: 'Brian 創建了一個強大的任務管理系統，具有智能分類和優先級排序功能。系統採用 React 框架，展現了紮實的前端開發能力。'
+        },
+        { 
+            name: 'GM', 
+            image: '學員成果/20250629/GM.png', 
+            description: 'GM 的作品充滿創新精神，將複雜的概念以簡潔的方式呈現。',
+            skills: ['Innovation', 'Simplicity', 'UX Design'],
+            projectTitle: '極簡主義天氣應用',
+            details: 'GM 設計了一個極簡但功能完整的天氣應用，通過優雅的動畫和直觀的界面，將複雜的氣象數據轉化為易懂的視覺呈現。'
+        },
+        { 
+            name: 'YU', 
+            image: '學員成果/20250629/YU.png', 
+            description: 'YU 展現了紮實的基礎功力，作品細節處理得相當到位。',
+            skills: ['HTML/CSS', 'Attention to Detail', 'Responsive Design'],
+            projectTitle: '響應式電商網站',
+            details: 'YU 開發了一個完整的電商網站，從商品展示到購物車功能一應俱全。特別注重響應式設計，確保在各種設備上都有完美的體驗。'
+        },
+        { 
+            name: 'owo', 
+            image: '學員成果/20250629/owo.png', 
+            description: 'owo 的作品充滿童趣與創意，為專案帶來了獨特的風格。',
+            skills: ['Animation', 'Creative Coding', 'Game Design'],
+            projectTitle: '互動式學習遊戲',
+            details: 'owo 創作了一個寓教於樂的互動遊戲，幫助孩子們學習程式邏輯。遊戲充滿趣味性的同時，也巧妙地融入了編程概念。'
+        }
+    ],
     '20250727': []
 };
 
@@ -11,9 +52,13 @@ async function loadStudentsData() {
         const localData = localStorage.getItem('studentsData');
         if (localData) {
             const parsedData = JSON.parse(localData);
-            students = convertDataFormat(parsedData.batches);
-            console.log('Loaded students from localStorage:', students);
-            return;
+            const loadedData = convertDataFormat(parsedData.batches);
+            // Only override if we actually got data
+            if (loadedData['20250629'] && loadedData['20250629'].length > 0) {
+                students = loadedData;
+                console.log('Loaded students from localStorage:', students);
+                return;
+            }
         }
         
         // Otherwise load from JSON file
@@ -22,58 +67,18 @@ async function loadStudentsData() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        students = convertDataFormat(data.batches);
-        console.log('Loaded students from JSON file:', students);
+        const jsonData = convertDataFormat(data.batches);
+        // Only override if we actually got data
+        if (jsonData['20250629'] && jsonData['20250629'].length > 0) {
+            students = jsonData;
+            console.log('Loaded students from JSON file:', students);
+        } else {
+            console.log('JSON file has no student data, keeping default data');
+        }
     } catch (error) {
         console.error('Error loading students data:', error);
-        // Fallback to hardcoded data if loading fails
-        console.log('Using hardcoded students data');
-        // Hardcode the students data here for fallback
-        students = {
-            '20250629': [
-                { 
-                    name: 'Amy', 
-                    image: '學員成果/20250629/Amy.jpg', 
-                    description: 'Amy 的作品展現了對色彩的敏銳掌握，創意十足的設計理念令人印象深刻。',
-                    skills: ['UI/UX Design', 'Color Theory', 'Creative Design'],
-                    projectTitle: '互動式色彩探索應用',
-                    details: 'Amy 開發了一個創新的色彩探索應用，讓使用者能夠直觀地理解色彩理論。該應用結合了現代設計美學與實用功能，獲得了導師的高度評價。'
-                },
-                { 
-                    name: 'Brian', 
-                    image: '學員成果/20250629/Brian.png', 
-                    description: 'Brian 在程式邏輯上展現了卓越的天賦，作品兼具功能性與美觀性。',
-                    skills: ['JavaScript', 'React', 'Problem Solving'],
-                    projectTitle: '智能任務管理系統',
-                    details: 'Brian 創建了一個強大的任務管理系統，具有智能分類和優先級排序功能。系統採用 React 框架，展現了紮實的前端開發能力。'
-                },
-                { 
-                    name: 'GM', 
-                    image: '學員成果/20250629/GM.png', 
-                    description: 'GM 的作品充滿創新精神，將複雜的概念以簡潔的方式呈現。',
-                    skills: ['Innovation', 'Simplicity', 'UX Design'],
-                    projectTitle: '極簡主義天氣應用',
-                    details: 'GM 設計了一個極簡但功能完整的天氣應用，通過優雅的動畫和直觀的界面，將複雜的氣象數據轉化為易懂的視覺呈現。'
-                },
-                { 
-                    name: 'YU', 
-                    image: '學員成果/20250629/YU.png', 
-                    description: 'YU 展現了紮實的基礎功力，作品細節處理得相當到位。',
-                    skills: ['HTML/CSS', 'Attention to Detail', 'Responsive Design'],
-                    projectTitle: '響應式電商網站',
-                    details: 'YU 開發了一個完整的電商網站，從商品展示到購物車功能一應俱全。特別注重響應式設計，確保在各種設備上都有完美的體驗。'
-                },
-                { 
-                    name: 'owo', 
-                    image: '學員成果/20250629/owo.png', 
-                    description: 'owo 的作品充滿童趣與創意，為專案帶來了獨特的風格。',
-                    skills: ['Animation', 'Creative Coding', 'Game Design'],
-                    projectTitle: '互動式學習遊戲',
-                    details: 'owo 創作了一個寓教於樂的互動遊戲，幫助孩子們學習程式邏輯。遊戲充滿趣味性的同時，也巧妙地融入了編程概念。'
-                }
-            ],
-            '20250727': []
-        };
+        console.log('Keeping default hardcoded students data');
+        // Don't override the default data
     }
 }
 
@@ -245,62 +250,11 @@ function showBatch(batchId) {
         return;
     }
     
-    // Ensure students data is loaded
-    if (!students || Object.keys(students).length === 0) {
-        console.warn('Students data not loaded, using hardcoded data');
-        // Use hardcoded data as fallback
-        students = {
-            '20250629': [
-                { 
-                    name: 'Amy', 
-                    image: '學員成果/20250629/Amy.jpg', 
-                    description: 'Amy 的作品展現了對色彩的敏銳掌握，創意十足的設計理念令人印象深刻。',
-                    skills: ['UI/UX Design', 'Color Theory', 'Creative Design'],
-                    projectTitle: '互動式色彩探索應用',
-                    details: 'Amy 開發了一個創新的色彩探索應用，讓使用者能夠直觀地理解色彩理論。該應用結合了現代設計美學與實用功能，獲得了導師的高度評價。'
-                },
-                { 
-                    name: 'Brian', 
-                    image: '學員成果/20250629/Brian.png', 
-                    description: 'Brian 在程式邏輯上展現了卓越的天賦，作品兼具功能性與美觀性。',
-                    skills: ['JavaScript', 'React', 'Problem Solving'],
-                    projectTitle: '智能任務管理系統',
-                    details: 'Brian 創建了一個強大的任務管理系統，具有智能分類和優先級排序功能。系統採用 React 框架，展現了紮實的前端開發能力。'
-                },
-                { 
-                    name: 'GM', 
-                    image: '學員成果/20250629/GM.png', 
-                    description: 'GM 的作品充滿創新精神，將複雜的概念以簡潔的方式呈現。',
-                    skills: ['Innovation', 'Simplicity', 'UX Design'],
-                    projectTitle: '極簡主義天氣應用',
-                    details: 'GM 設計了一個極簡但功能完整的天氣應用，通過優雅的動畫和直觀的界面，將複雜的氣象數據轉化為易懂的視覺呈現。'
-                },
-                { 
-                    name: 'YU', 
-                    image: '學員成果/20250629/YU.png', 
-                    description: 'YU 展現了紮實的基礎功力，作品細節處理得相當到位。',
-                    skills: ['HTML/CSS', 'Attention to Detail', 'Responsive Design'],
-                    projectTitle: '響應式電商網站',
-                    details: 'YU 開發了一個完整的電商網站，從商品展示到購物車功能一應俱全。特別注重響應式設計，確保在各種設備上都有完美的體驗。'
-                },
-                { 
-                    name: 'owo', 
-                    image: '學員成果/20250629/owo.png', 
-                    description: 'owo 的作品充滿童趣與創意，為專案帶來了獨特的風格。',
-                    skills: ['Animation', 'Creative Coding', 'Game Design'],
-                    projectTitle: '互動式學習遊戲',
-                    details: 'owo 創作了一個寓教於樂的互動遊戲，幫助孩子們學習程式邏輯。遊戲充滿趣味性的同時，也巧妙地融入了編程概念。'
-                }
-            ],
-            '20250727': []
-        };
-    }
-    
     const studentsData = students[batchId] || [];
     
     galleryGrid.innerHTML = '';
     
-    console.log(`Showing batch ${batchId} with ${studentsData.length} students`);
+    console.log(`Showing batch ${batchId} with ${studentsData.length} students:`, studentsData);
     
     if (studentsData.length === 0) {
         galleryGrid.innerHTML = '<p class="col-span-full text-center text-gray-500">該期別尚無作品展示</p>';
@@ -312,51 +266,23 @@ function showBatch(batchId) {
         galleryGrid.appendChild(item);
     });
     
-    // Apply the same animation as displayAllStudents
-    setTimeout(() => {
-        // Set initial state
-        gsap.set('.gallery-item', { opacity: 0, y: 100, scale: 0.95 });
-        
-        // Batch animation for gallery items
-        ScrollTrigger.batch('.gallery-item', {
-            onEnter: batch => {
-                gsap.to(batch, {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    duration: 1,
-                    stagger: {
-                        each: 0.1,
-                        from: 'start'
-                    },
-                    ease: 'power3.out',
-                    overwrite: 'auto'
-                });
-            },
-            onLeave: batch => gsap.set(batch, { opacity: 0, y: 100, scale: 0.95 }),
-            onEnterBack: batch => gsap.to(batch, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                duration: 0.6,
-                stagger: 0.05,
-                ease: 'power2.out',
-                overwrite: 'auto'
-            }),
-            onLeaveBack: batch => gsap.set(batch, { opacity: 0, y: -100, scale: 0.95 }),
-            start: 'top 90%',
-            end: 'bottom 10%'
-        });
-        
-        // Also add immediate animation for visible items
-        gsap.from('.gallery-item', {
+    // Simple animation without ScrollTrigger refresh issues
+    gsap.fromTo('.gallery-item', 
+        {
             scale: 0,
             opacity: 0,
-            duration: 0.5,
+            y: 50
+        },
+        {
+            scale: 1,
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
             stagger: 0.1,
-            ease: 'back.out(1.7)'
-        });
-    }, 100);
+            ease: 'power3.out',
+            clearProps: 'all'
+        }
+    );
     
     document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
 }
