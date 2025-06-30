@@ -89,24 +89,43 @@ function convertDataFormat(batches) {
 let journeyPosts = JSON.parse(localStorage.getItem('journeyPosts')) || [];
 
 // Initialize GSAP and ScrollTrigger
-gsap.registerPlugin(ScrollTrigger);
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
+
+// Ensure loader is removed after max 3 seconds
+setTimeout(() => {
+    const loader = document.getElementById('loader');
+    if (loader && loader.style.display !== 'none') {
+        loader.style.display = 'none';
+        console.warn('Loader removed by timeout');
+    }
+}, 3000);
 
 // Loading animation
-window.addEventListener('load', async function() {
+window.addEventListener('DOMContentLoaded', async function() {
     try {
         // Load students data first
         await loadStudentsData();
         
-        gsap.to('#loader', {
-            opacity: 0,
-            duration: 0.5,
-            onComplete: function() {
-                document.getElementById('loader').style.display = 'none';
-            }
-        });
+        // Ensure GSAP is loaded
+        if (typeof gsap !== 'undefined') {
+            gsap.to('#loader', {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: function() {
+                    document.getElementById('loader').style.display = 'none';
+                }
+            });
+        } else {
+            // Fallback if GSAP is not loaded
+            document.getElementById('loader').style.display = 'none';
+        }
 
-        // Initialize animations
-        initAnimations();
+        // Initialize animations only if GSAP is available
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            initAnimations();
+        }
         
         // Display content
         displayAllStudents();
@@ -114,7 +133,10 @@ window.addEventListener('load', async function() {
     } catch (error) {
         console.error('Error during initialization:', error);
         // Hide loader even if there's an error
-        document.getElementById('loader').style.display = 'none';
+        const loader = document.getElementById('loader');
+        if (loader) {
+            loader.style.display = 'none';
+        }
     }
 });
 
@@ -247,20 +269,26 @@ function showBatch(batchId) {
 function createGalleryItem(student, index) {
     const item = document.createElement('div');
     item.className = 'gallery-item group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer';
+    
+    // Ensure skills array exists
+    const skills = student.skills || [];
+    
     item.innerHTML = `
         <div class="aspect-w-16 aspect-h-12 relative overflow-hidden">
             <img src="${student.image}" 
                  alt="${student.name}的作品" 
                  class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
-                 onerror="this.src='https://via.placeholder.com/400x300?text=${student.name}'">
+                 onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(student.name)}'">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
         <div class="p-6 bg-white">
             <h3 class="text-xl font-bold text-gray-800 mb-2">${student.name}</h3>
-            <p class="text-gray-600 mb-4">${student.description}</p>
-            <div class="flex flex-wrap gap-2 mb-4">
-                ${student.skills.map(skill => `<span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">${skill}</span>`).join('')}
-            </div>
+            <p class="text-gray-600 mb-4">${student.description || '作品描述'}</p>
+            ${skills.length > 0 ? `
+                <div class="flex flex-wrap gap-2 mb-4">
+                    ${skills.map(skill => `<span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">${skill}</span>`).join('')}
+                </div>
+            ` : ''}
             <button onclick="openModal('${student.name}')" class="text-purple-600 font-semibold hover:text-purple-700 transition-colors">
                 查看詳情 <i class="fas fa-arrow-right ml-1"></i>
             </button>
@@ -271,14 +299,23 @@ function createGalleryItem(student, index) {
 
 function displayAllStudents() {
     const galleryGrid = document.getElementById('gallery-grid');
+    if (!galleryGrid) {
+        console.error('Gallery grid element not found');
+        return;
+    }
+    
     galleryGrid.innerHTML = '';
     
     let allStudents = [];
     Object.keys(students).forEach(batchId => {
-        students[batchId].forEach(student => {
-            allStudents.push({...student, batchId});
-        });
+        if (students[batchId] && Array.isArray(students[batchId])) {
+            students[batchId].forEach(student => {
+                allStudents.push({...student, batchId});
+            });
+        }
     });
+
+    console.log('All students to display:', allStudents);
 
     if (allStudents.length === 0) {
         galleryGrid.innerHTML = '<p class="col-span-full text-center text-gray-500">暫無學員作品</p>';
