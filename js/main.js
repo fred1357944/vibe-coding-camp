@@ -274,12 +274,16 @@ function createGalleryItem(student, index) {
     const skills = student.skills || [];
     
     item.innerHTML = `
-        <div class="aspect-w-16 aspect-h-12 relative overflow-hidden">
+        <div class="aspect-w-16 aspect-h-12 relative overflow-hidden" onclick="openLightbox('${student.image}', '${student.name}的作品 - ${student.projectTitle || student.description}')">
             <img src="${student.image}" 
                  alt="${student.name}的作品" 
-                 class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                 class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300 cursor-pointer"
                  onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(student.name)}'">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i class="fas fa-search-plus text-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                </div>
+            </div>
         </div>
         <div class="p-6 bg-white">
             <h3 class="text-xl font-bold text-gray-800 mb-2">${student.name}</h3>
@@ -577,3 +581,124 @@ document.getElementById('work-modal').addEventListener('click', function(e) {
         closeModal();
     }
 });
+
+// Lightbox functionality
+let currentImages = [];
+let currentImageIndex = 0;
+
+function openLightbox(imageSrc, caption) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    
+    // Collect all gallery images
+    currentImages = [];
+    document.querySelectorAll('.gallery-item img').forEach((img, index) => {
+        currentImages.push({
+            src: img.src,
+            caption: img.alt
+        });
+        if (img.src === imageSrc || img.src.includes(encodeURIComponent(imageSrc))) {
+            currentImageIndex = index;
+        }
+    });
+    
+    // Set image and caption
+    lightboxImage.src = imageSrc;
+    lightboxCaption.textContent = caption || '';
+    updateLightboxCounter();
+    
+    // Show lightbox with animation
+    lightbox.classList.remove('hidden');
+    gsap.from('#lightbox-image', {
+        scale: 0.8,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.out'
+    });
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    gsap.to('#lightbox-image', {
+        scale: 0.8,
+        opacity: 0,
+        duration: 0.2,
+        ease: 'power2.in',
+        onComplete: () => {
+            lightbox.classList.add('hidden');
+        }
+    });
+}
+
+function nextImage() {
+    currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+    updateLightboxImage();
+}
+
+function previousImage() {
+    currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+    updateLightboxImage();
+}
+
+function updateLightboxImage() {
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const currentImage = currentImages[currentImageIndex];
+    
+    gsap.to('#lightbox-image', {
+        opacity: 0,
+        duration: 0.2,
+        onComplete: () => {
+            lightboxImage.src = currentImage.src;
+            lightboxCaption.textContent = currentImage.caption;
+            gsap.to('#lightbox-image', {
+                opacity: 1,
+                duration: 0.2
+            });
+        }
+    });
+    
+    updateLightboxCounter();
+}
+
+function updateLightboxCounter() {
+    const counter = document.getElementById('lightbox-counter');
+    counter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+}
+
+// Keyboard navigation for lightbox
+document.addEventListener('keydown', function(e) {
+    const lightbox = document.getElementById('lightbox');
+    if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'Escape') {
+            closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+            previousImage();
+        } else if (e.key === 'ArrowRight') {
+            nextImage();
+        }
+    }
+});
+
+// Touch/swipe support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.getElementById('lightbox').addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.getElementById('lightbox').addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    if (touchEndX < touchStartX - 50) {
+        nextImage(); // Swipe left
+    }
+    if (touchEndX > touchStartX + 50) {
+        previousImage(); // Swipe right
+    }
+}

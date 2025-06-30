@@ -230,6 +230,27 @@
         </div>
     </div>
 
+    <!-- Image Lightbox -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/90" onclick="closeLightbox()"></div>
+        <div class="relative flex items-center justify-center min-h-screen p-4">
+            <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 bg-white/20 backdrop-blur rounded-full w-12 h-12 flex items-center justify-center hover:bg-white/30 transition-colors">
+                <i class="fas fa-times text-white text-xl"></i>
+            </button>
+            <button onclick="previousImage()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur rounded-full w-12 h-12 flex items-center justify-center hover:bg-white/30 transition-colors">
+                <i class="fas fa-chevron-left text-white text-xl"></i>
+            </button>
+            <button onclick="nextImage()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur rounded-full w-12 h-12 flex items-center justify-center hover:bg-white/30 transition-colors">
+                <i class="fas fa-chevron-right text-white text-xl"></i>
+            </button>
+            <img id="lightbox-image" src="" alt="" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl">
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-center">
+                <p id="lightbox-caption" class="text-lg font-semibold mb-2"></p>
+                <p id="lightbox-counter" class="text-sm opacity-75"></p>
+            </div>
+        </div>
+    </div>
+
     <style>
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
@@ -245,6 +266,41 @@
         }
         .animation-delay-4000 {
             animation-delay: 4s;
+        }
+        
+        /* Lightbox styles */
+        #lightbox img {
+            cursor: zoom-out;
+            user-select: none;
+        }
+        
+        #lightbox button {
+            transition: all 0.3s ease;
+        }
+        
+        #lightbox button:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Gallery item hover effect for image */
+        .gallery-item:hover img {
+            filter: brightness(0.9);
+        }
+        
+        /* Zoom animation */
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        #lightbox.active #lightbox-image {
+            animation: zoomIn 0.3s ease-out;
         }
     </style>
 
