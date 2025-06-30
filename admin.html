@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者後台 - Vibe Coding Camp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Admin Login Modal -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+            <h2 class="text-2xl font-bold mb-6 gradient-text">管理者登入</h2>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">密碼</label>
+                    <input type="password" id="admin-password" 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+                        placeholder="請輸入管理者密碼" required>
+                </div>
+                <button type="submit" 
+                    class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-semibold">
+                    登入
+                </button>
+                <p class="mt-4 text-sm text-gray-600 text-center">預設密碼：admin123</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Admin Panel (Hidden until login) -->
+    <div id="admin-panel" class="hidden">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-lg sticky top-0 z-40">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl font-bold gradient-text">Vibe Coding Camp - 管理者後台</h1>
+                    <div class="flex items-center gap-4">
+                        <a href="index.html" target="_blank" class="text-gray-600 hover:text-purple-600">
+                            <i class="fas fa-external-link-alt mr-2"></i>查看網站
+                        </a>
+                        <button onclick="logout()" class="text-red-600 hover:text-red-700">
+                            <i class="fas fa-sign-out-alt mr-2"></i>登出
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div class="container mx-auto px-6 py-8">
+            <!-- Instructions -->
+            <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-8 rounded">
+                <h3 class="font-bold text-blue-800 mb-2">
+                    <i class="fas fa-info-circle mr-2"></i>如何編輯學員資料
+                </h3>
+                <ol class="text-blue-700 space-y-1 ml-6 list-decimal">
+                    <li>點擊下方的「編輯資料」按鈕開啟編輯器</li>
+                    <li>直接在 JSON 編輯器中修改學員資料</li>
+                    <li>修改完成後點擊「保存變更」</li>
+                    <li>資料會自動更新到網站上</li>
+                </ol>
+            </div>
+
+            <!-- Batch Management -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Current Students Overview -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">目前學員總覽</h2>
+                    <div id="students-overview" class="space-y-4">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Quick Add Student -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">快速新增學員</h2>
+                    <form id="quick-add-form" class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 mb-2">期別</label>
+                            <select id="batch-select" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200">
+                                <option value="20250629">2025年6月期</option>
+                                <option value="20250727">2025年7月期</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">學員姓名</label>
+                            <input type="text" id="student-name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">作品圖片路徑</label>
+                            <input type="text" id="image-path" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200" placeholder="例：學員成果/20250629/name.jpg" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">作品描述</label>
+                            <textarea id="description" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200" required></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">技能標籤（用逗號分隔）</label>
+                            <input type="text" id="skills" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200" placeholder="例：JavaScript, React, UI Design" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">專案標題</label>
+                            <input type="text" id="project-title" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">詳細介紹</label>
+                            <textarea id="details" rows="4" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                            <i class="fas fa-plus mr-2"></i>新增學員
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- JSON Editor -->
+            <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold">JSON 資料編輯器</h2>
+                    <div class="space-x-2">
+                        <button onclick="loadData()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-sync mr-2"></i>重新載入
+                        </button>
+                        <button onclick="saveData()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="fas fa-save mr-2"></i>保存變更
+                        </button>
+                        <button onclick="downloadData()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                            <i class="fas fa-download mr-2"></i>下載備份
+                        </button>
+                    </div>
+                </div>
+                <div class="relative">
+                    <textarea id="json-editor" 
+                        class="w-full h-96 px-4 py-3 font-mono text-sm bg-gray-900 text-green-400 rounded-lg resize-none"
+                        placeholder="JSON 資料將顯示在這裡..."></textarea>
+                </div>
+                <p class="mt-2 text-sm text-gray-600">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    請確保 JSON 格式正確，錯誤的格式會導致網站無法正常顯示
+                </p>
+            </div>
+
+            <!-- Instructions for Adding Images -->
+            <div class="mt-8 bg-yellow-50 border-l-4 border-yellow-600 p-4 rounded">
+                <h3 class="font-bold text-yellow-800 mb-2">
+                    <i class="fas fa-image mr-2"></i>如何新增學員圖片
+                </h3>
+                <ol class="text-yellow-700 space-y-1 ml-6 list-decimal">
+                    <li>將學員的作品圖片放到對應的資料夾中（例：學員成果/20250629/）</li>
+                    <li>圖片檔名建議使用學員的英文名字（例：Amy.jpg）</li>
+                    <li>在 JSON 編輯器中填入正確的圖片路徑</li>
+                    <li>支援的圖片格式：jpg, png, gif, webp</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

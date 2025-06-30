@@ -1,48 +1,39 @@
-const students = {
-    '20250629': [
-        { 
-            name: 'Amy', 
-            image: '學員成果/20250629/Amy.jpg', 
-            description: 'Amy 的作品展現了對色彩的敏銳掌握，創意十足的設計理念令人印象深刻。',
-            skills: ['UI/UX Design', 'Color Theory', 'Creative Design'],
-            projectTitle: '互動式色彩探索應用',
-            details: 'Amy 開發了一個創新的色彩探索應用，讓使用者能夠直觀地理解色彩理論。該應用結合了現代設計美學與實用功能，獲得了導師的高度評價。'
-        },
-        { 
-            name: 'Brian', 
-            image: '學員成果/20250629/Brian.png', 
-            description: 'Brian 在程式邏輯上展現了卓越的天賦，作品兼具功能性與美觀性。',
-            skills: ['JavaScript', 'React', 'Problem Solving'],
-            projectTitle: '智能任務管理系統',
-            details: 'Brian 創建了一個強大的任務管理系統，具有智能分類和優先級排序功能。系統採用 React 框架，展現了紮實的前端開發能力。'
-        },
-        { 
-            name: 'GM', 
-            image: '學員成果/20250629/GM.png', 
-            description: 'GM 的作品充滿創新精神，將複雜的概念以簡潔的方式呈現。',
-            skills: ['Innovation', 'Simplicity', 'UX Design'],
-            projectTitle: '極簡主義天氣應用',
-            details: 'GM 設計了一個極簡但功能完整的天氣應用，通過優雅的動畫和直觀的界面，將複雜的氣象數據轉化為易懂的視覺呈現。'
-        },
-        { 
-            name: 'YU', 
-            image: '學員成果/20250629/YU.png', 
-            description: 'YU 展現了紮實的基礎功力，作品細節處理得相當到位。',
-            skills: ['HTML/CSS', 'Attention to Detail', 'Responsive Design'],
-            projectTitle: '響應式電商網站',
-            details: 'YU 開發了一個完整的電商網站，從商品展示到購物車功能一應俱全。特別注重響應式設計，確保在各種設備上都有完美的體驗。'
-        },
-        { 
-            name: 'owo', 
-            image: '學員成果/20250629/owo.png', 
-            description: 'owo 的作品充滿童趣與創意，為專案帶來了獨特的風格。',
-            skills: ['Animation', 'Creative Coding', 'Game Design'],
-            projectTitle: '互動式學習遊戲',
-            details: 'owo 創作了一個寓教於樂的互動遊戲，幫助孩子們學習程式邏輯。遊戲充滿趣味性的同時，也巧妙地融入了編程概念。'
-        }
-    ],
+// Default students data (will be overridden by JSON file or localStorage)
+let students = {
+    '20250629': [],
     '20250727': []
 };
+
+// Load students data from JSON file or localStorage
+async function loadStudentsData() {
+    try {
+        // First check if there's updated data in localStorage (from admin panel)
+        const localData = localStorage.getItem('studentsData');
+        if (localData) {
+            const parsedData = JSON.parse(localData);
+            students = convertDataFormat(parsedData.batches);
+            return;
+        }
+        
+        // Otherwise load from JSON file
+        const response = await fetch('data/students.json');
+        const data = await response.json();
+        students = convertDataFormat(data.batches);
+    } catch (error) {
+        console.error('Error loading students data:', error);
+        // Fallback to default data if loading fails
+        console.log('Using default students data');
+    }
+}
+
+// Convert data format from JSON structure to the format used in the app
+function convertDataFormat(batches) {
+    const result = {};
+    Object.entries(batches).forEach(([batchId, batch]) => {
+        result[batchId] = batch.students || [];
+    });
+    return result;
+}
 
 let journeyPosts = JSON.parse(localStorage.getItem('journeyPosts')) || [];
 
@@ -50,7 +41,9 @@ let journeyPosts = JSON.parse(localStorage.getItem('journeyPosts')) || [];
 gsap.registerPlugin(ScrollTrigger);
 
 // Loading animation
-window.addEventListener('load', function() {
+window.addEventListener('load', async function() {
+    // Load students data first
+    await loadStudentsData();
     gsap.to('#loader', {
         opacity: 0,
         duration: 0.5,
@@ -408,6 +401,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             });
         }
     });
+});
+
+// Listen for data updates from admin panel
+window.addEventListener('studentsDataUpdated', function(e) {
+    students = convertDataFormat(e.detail.batches);
+    displayAllStudents();
 });
 
 // Modal close on outside click
