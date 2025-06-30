@@ -4,81 +4,250 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vibe Coding Camp - 學員成果發表</title>
-    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar">
-            <div class="container">
-                <h1 class="logo">Vibe Coding Camp</h1>
-                <ul class="nav-links">
-                    <li><a href="#home">首頁</a></li>
-                    <li><a href="#batches">期別展示</a></li>
-                    <li><a href="#gallery">成果作品</a></li>
-                    <li><a href="#journey">學習歷程</a></li>
+<body class="bg-gray-50">
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-white">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <p class="mt-4 text-gray-600">載入中...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-40 glass-effect border-b border-white/20">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold gradient-text">Vibe Coding Camp</h1>
+                
+                <!-- Desktop Navigation -->
+                <ul class="hidden md:flex items-center space-x-8">
+                    <li><a href="#home" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">首頁</a></li>
+                    <li><a href="#batches" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">期別展示</a></li>
+                    <li><a href="#gallery" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">成果作品</a></li>
+                    <li><a href="#journey" class="nav-link text-gray-700 hover:text-purple-600 transition-colors">學習歷程</a></li>
                 </ul>
-            </div>
-        </nav>
-    </header>
 
-    <section id="home" class="hero">
-        <div class="container">
-            <h2>歡迎來到 Vibe Coding Camp</h2>
-            <p>探索學員們的創意作品與學習歷程</p>
-            <button class="cta-button" onclick="location.href='#batches'">瀏覽成果</button>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2">
+                    <i class="fas fa-bars text-2xl text-gray-700"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <ul class="px-6 py-4 space-y-3">
+                <li><a href="#home" class="mobile-nav-link block text-gray-700 hover:text-purple-600">首頁</a></li>
+                <li><a href="#batches" class="mobile-nav-link block text-gray-700 hover:text-purple-600">期別展示</a></li>
+                <li><a href="#gallery" class="mobile-nav-link block text-gray-700 hover:text-purple-600">成果作品</a></li>
+                <li><a href="#journey" class="mobile-nav-link block text-gray-700 hover:text-purple-600">學習歷程</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center gradient-bg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+            <div class="absolute top-40 right-10 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 text-center text-white relative z-10">
+            <h2 class="hero-title text-5xl md:text-7xl font-bold mb-6">歡迎來到 Vibe Coding Camp</h2>
+            <p class="hero-subtitle text-xl md:text-2xl mb-10 text-white/90">探索學員們的創意作品與學習歷程</p>
+            <button onclick="location.href='#batches'" class="hero-btn bg-white text-purple-600 px-8 py-4 rounded-full font-semibold text-lg hover:scale-105 transform transition-all duration-300 shadow-lg">
+                開始探索 <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-white text-2xl"></i>
         </div>
     </section>
 
-    <section id="batches" class="batches-section">
-        <div class="container">
-            <h2>期別展示</h2>
-            <div class="batch-grid">
-                <div class="batch-card" data-batch="20250629">
-                    <h3>2025年6月期</h3>
-                    <p>第一期學員成果</p>
-                    <button onclick="showBatch('20250629')">查看成果</button>
+    <!-- Batches Section -->
+    <section id="batches" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-4xl md:text-5xl font-bold mb-4 gradient-text">期別展示</h2>
+                <p class="text-gray-600 text-lg">選擇查看不同期別的學員成果</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="batch-card group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 transform hover:-translate-y-2" data-batch="20250629">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-graduation-cap text-2xl text-purple-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">2025年6月期</h3>
+                        <p class="text-gray-600">第一期學員成果展示</p>
+                    </div>
+                    <button onclick="showBatch('20250629')" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                        查看成果 <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
-                <div class="batch-card" data-batch="20250727">
-                    <h3>2025年7月期</h3>
-                    <p>第二期學員成果</p>
-                    <button onclick="showBatch('20250727')">查看成果</button>
+                
+                <div class="batch-card group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 transform hover:-translate-y-2" data-batch="20250727">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-code text-2xl text-blue-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">2025年7月期</h3>
+                        <p class="text-gray-600">第二期學員成果展示</p>
+                    </div>
+                    <button onclick="showBatch('20250727')" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                        查看成果 <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="gallery" class="gallery-section">
-        <div class="container">
-            <h2>學員作品展示</h2>
-            <div id="gallery-grid" class="gallery-grid">
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-4xl md:text-5xl font-bold mb-4 gradient-text">學員作品展示</h2>
+                <p class="text-gray-600 text-lg">欣賞學員們的創意與努力成果</p>
+            </div>
+            
+            <div id="gallery-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Gallery items will be dynamically inserted here -->
             </div>
         </div>
     </section>
 
-    <section id="journey" class="journey-section">
-        <div class="container">
-            <h2>學習歷程分享</h2>
-            <div class="journey-container">
-                <div class="journey-form">
-                    <h3>分享你的學習歷程</h3>
-                    <form id="journey-form">
-                        <input type="text" id="student-name" placeholder="你的名字" required>
-                        <input type="text" id="batch" placeholder="期別 (例: 2025年6月期)" required>
-                        <textarea id="journey-content" placeholder="分享你的學習歷程..." rows="5" required></textarea>
-                        <button type="submit">發布分享</button>
-                    </form>
+    <!-- Journey Section -->
+    <section id="journey" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-4xl md:text-5xl font-bold mb-4 gradient-text">學習歷程分享</h2>
+                <p class="text-gray-600 text-lg">分享你的學習心得，激勵更多夥伴</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Share Form -->
+                <div class="lg:col-span-1">
+                    <div class="journey-form bg-gray-50 rounded-2xl p-8 sticky top-24">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                            <i class="fas fa-pen-fancy text-purple-600 mr-2"></i>
+                            分享你的歷程
+                        </h3>
+                        <form id="journey-form" class="space-y-4">
+                            <div>
+                                <input type="text" id="student-name" 
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                                    placeholder="你的名字" required>
+                            </div>
+                            <div>
+                                <input type="text" id="batch" 
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                                    placeholder="期別 (例: 2025年6月期)" required>
+                            </div>
+                            <div>
+                                <textarea id="journey-content" 
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all resize-none"
+                                    placeholder="分享你的學習歷程..." rows="5" required></textarea>
+                            </div>
+                            <button type="submit" 
+                                class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all font-semibold">
+                                發布分享 <i class="fas fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <div id="journey-posts" class="journey-posts">
+                
+                <!-- Journey Posts -->
+                <div class="lg:col-span-2">
+                    <div id="journey-posts" class="space-y-6">
+                        <!-- Journey posts will be dynamically inserted here -->
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Vibe Coding Camp. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold mb-4">Vibe Coding Camp</h3>
+                <p class="text-gray-400 mb-6">培養下一代的科技創造者</p>
+                <div class="flex justify-center space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-facebook text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-github text-2xl"></i>
+                    </a>
+                </div>
+                <p class="mt-8 text-gray-500">&copy; 2025 Vibe Coding Camp. All rights reserved.</p>
+            </div>
         </div>
     </footer>
+
+    <!-- Work Detail Modal -->
+    <div id="work-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="relative flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                <div class="relative">
+                    <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-white/80 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center hover:bg-white transition-colors">
+                        <i class="fas fa-times text-gray-700"></i>
+                    </button>
+                    <div id="modal-content" class="p-8">
+                        <!-- Modal content will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+    </style>
 
     <script src="js/main.js"></script>
 </body>
