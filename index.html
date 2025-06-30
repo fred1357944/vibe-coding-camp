@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Coding Camp - 學員成果發表</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo">Vibe Coding Camp</h1>
+                <ul class="nav-links">
+                    <li><a href="#home">首頁</a></li>
+                    <li><a href="#batches">期別展示</a></li>
+                    <li><a href="#gallery">成果作品</a></li>
+                    <li><a href="#journey">學習歷程</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <h2>歡迎來到 Vibe Coding Camp</h2>
+            <p>探索學員們的創意作品與學習歷程</p>
+            <button class="cta-button" onclick="location.href='#batches'">瀏覽成果</button>
+        </div>
+    </section>
+
+    <section id="batches" class="batches-section">
+        <div class="container">
+            <h2>期別展示</h2>
+            <div class="batch-grid">
+                <div class="batch-card" data-batch="20250629">
+                    <h3>2025年6月期</h3>
+                    <p>第一期學員成果</p>
+                    <button onclick="showBatch('20250629')">查看成果</button>
+                </div>
+                <div class="batch-card" data-batch="20250727">
+                    <h3>2025年7月期</h3>
+                    <p>第二期學員成果</p>
+                    <button onclick="showBatch('20250727')">查看成果</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery-section">
+        <div class="container">
+            <h2>學員作品展示</h2>
+            <div id="gallery-grid" class="gallery-grid">
+            </div>
+        </div>
+    </section>
+
+    <section id="journey" class="journey-section">
+        <div class="container">
+            <h2>學習歷程分享</h2>
+            <div class="journey-container">
+                <div class="journey-form">
+                    <h3>分享你的學習歷程</h3>
+                    <form id="journey-form">
+                        <input type="text" id="student-name" placeholder="你的名字" required>
+                        <input type="text" id="batch" placeholder="期別 (例: 2025年6月期)" required>
+                        <textarea id="journey-content" placeholder="分享你的學習歷程..." rows="5" required></textarea>
+                        <button type="submit">發布分享</button>
+                    </form>
+                </div>
+                <div id="journey-posts" class="journey-posts">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Vibe Coding Camp. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
